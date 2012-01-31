@@ -35,7 +35,7 @@ public class StateMachine {
 		//	Open the file stream
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)))) {
 			//	Read each line of the file
-			String line = br.readLine();
+			String line = br.readLine().trim();
 			int currentState = 0;
 			while(line != null) {
 				//	Strip out any comments
@@ -50,7 +50,7 @@ public class StateMachine {
 				sm.addState(tokens);
 				System.out.println("OK");
 				//	Get next line
-				line = br.readLine();
+				line = br.readLine().trim();
 				currentState ++;
 			}
 		} catch (Exception e) {
