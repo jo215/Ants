@@ -56,6 +56,7 @@ public class StateMachine {
 		} catch (Exception e) {
 			System.out.println("File I/O error with Ant Brain: " + fileName);
 			e.printStackTrace();
+			System.exit(0);
 		}
 		//	StateMachine is fully populated & validated
 		return sm;
