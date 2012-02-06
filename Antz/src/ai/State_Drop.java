@@ -1,5 +1,6 @@
 package ai;
 
+import program.Ant;
 import enums.E_Instruction;
 
 /**
@@ -25,7 +26,7 @@ public class State_Drop extends State_Abstract {
 	 * Drop food in current cell and goto state1;
 	 */
 	@Override
-	public void step() {
+	public void step(Ant ant) {
 		// TODO Auto-generated method stub
 
 	}

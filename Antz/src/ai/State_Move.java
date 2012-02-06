@@ -1,5 +1,6 @@
 package ai;
 
+import program.Ant;
 import enums.E_Instruction;
 
 /**
@@ -27,7 +28,7 @@ public class State_Move extends State_Abstract {
 	 * Move forward and goto state1; goto state2 if the cell ahead is blocked.
 	 */
 	@Override
-	public void step() {
+	public void step(Ant ant) {
 		// TODO Auto-generated method stub
 
 	}

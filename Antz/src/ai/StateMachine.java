@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import program.Ant;
 import program.Main;
 
 import enums.E_Instruction;
@@ -26,6 +27,16 @@ public class StateMachine {
 	}
 	
 	/**
+	 * Given an ant, gets and executes the next instruction. 
+	 * @param ant
+	 */
+	public void step(Ant ant) {
+		//TODO also need to pass in the cell object as an argument.
+		
+		//	All the kinetics logic can then be implemented her, calling step for each ant's state, as appropriate
+	}
+	
+	/**
 	 * Factory method. Parses an ant brain text file.
 	 * Using a Factory we always make sure the StateMachine is set up correctly.
 	 * @param string the file to parse
@@ -35,9 +46,10 @@ public class StateMachine {
 		//	Open the file stream
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)))) {
 			//	Read each line of the file
-			String line = br.readLine().trim();
+			String line = br.readLine();
 			int currentState = 0;
 			while(line != null) {
+				line.trim();
 				//	Strip out any comments
 				int i = line.indexOf(";");
 				if (i != -1) {
@@ -50,7 +62,7 @@ public class StateMachine {
 				sm.addState(tokens);
 				System.out.println("OK");
 				//	Get next line
-				line = br.readLine().trim();
+				line = br.readLine();
 				currentState ++;
 			}
 		} catch (Exception e) {

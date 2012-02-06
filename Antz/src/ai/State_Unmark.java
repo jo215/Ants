@@ -1,5 +1,6 @@
 package ai;
 
+import program.Ant;
 import enums.E_Instruction;
 
 /**
@@ -27,7 +28,7 @@ public class State_Unmark extends State_Abstract {
 	 * Clear mark marker in current cell and goto state1.
 	 */
 	@Override
-	public void step() {
+	public void step(Ant ant) {
 		// TODO Auto-generated method stub
 
 	}

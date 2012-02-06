@@ -1,5 +1,6 @@
 package ai;
 
+import program.Ant;
 import program.Main;
 import enums.E_Condition;
 import enums.E_Instruction;
@@ -36,7 +37,10 @@ public abstract class State_Abstract {
 	/**
 	 * Implement this method in each inheriting state to run state logic.
 	 */
-	public abstract void step();
+	public abstract void step(Ant ant);
+	{
+		//TODO Also need to pass in the cell location this ant is at 
+	}
 	
 	//
 	//	Helper methods ::-

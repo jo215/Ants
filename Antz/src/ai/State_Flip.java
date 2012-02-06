@@ -1,5 +1,6 @@
 package ai;
 
+import program.Ant;
 import enums.E_Instruction;
 
 /**
@@ -29,7 +30,7 @@ public class State_Flip extends State_Abstract {
 	 * Choose a random number x from 0 to p-1; goto state1 if x=0 and state2 otherwise.
 	 */
 	@Override
-	public void step() {
+	public void step(Ant ant) {
 		// TODO Auto-generated method stub
 
 	}

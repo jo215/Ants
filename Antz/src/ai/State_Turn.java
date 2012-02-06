@@ -1,5 +1,6 @@
 package ai;
 
+import program.Ant;
 import enums.E_Instruction;
 import enums.E_LeftOrRight;
 
@@ -28,7 +29,7 @@ public class State_Turn extends State_Abstract {
 	 * Turn left or right and goto state1.
 	 */
 	@Override
-	public void step() {
+	public void step(Ant ant) {
 		// TODO Auto-generated method stub
 
 	}

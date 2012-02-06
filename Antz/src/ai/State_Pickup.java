@@ -1,5 +1,6 @@
 package ai;
 
+import program.Ant;
 import enums.E_Instruction;
 
 /**
@@ -27,7 +28,7 @@ public class State_Pickup extends State_Abstract {
 	 * Pickup food from current cell and goto state1; goto state2 if there is no food in the current cell.
 	 */
 	@Override
-	public void step() {
+	public void step(Ant ant) {
 		// TODO Auto-generated method stub
 
 	}
