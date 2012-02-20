@@ -1,5 +1,7 @@
 package program;
 
+import java.util.ArrayList;
+
 import ai.StateMachine;
 
 /**
@@ -8,7 +10,8 @@ import ai.StateMachine;
  * @version 1
  */
 public class Main {
-
+	
+	
 	/**
 	 * Main method just to get things up and running.
 	 * @param args
@@ -16,6 +19,12 @@ public class Main {
 	public static void main(String[] args)
 	{
 		StateMachine.newInstance("exampleBrain.txt");
+		
+		RandGenerator rng = new RandGenerator(12345);
+		for (int i = 0; i < 100; i++)
+		{
+			System.out.println(" " + rng.randomInt(16384));
+		}
 	}
 
 	
