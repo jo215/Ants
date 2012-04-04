@@ -1,8 +1,7 @@
 package program;
 
-import java.util.ArrayList;
-
-import ai.StateMachine;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 /**
  * Test driver. 
@@ -18,16 +17,29 @@ public class Main {
 	 */
 	public static void main(String[] args)
 	{
-		StateMachine.newInstance("exampleBrain.txt");
+		setNimbusLookAndFeel();
+		GameManager gm = new GameManager();
 		
-		RandGenerator rng = new RandGenerator(12345);
-		for (int i = 0; i < 100; i++)
-		{
-			System.out.println(" " + rng.randomInt(16384));
+	}
+
+	/**
+	 * If possible, sets the Nimbus L&F.
+	 */
+	private static void setNimbusLookAndFeel() {
+		try {
+		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (Exception e) {
+		    // If Nimbus is not available, you can set the GUI to another look and feel.
+			//	We'll just go with default
 		}
 	}
 
-	
+
 	/**
 	 * Prints an error message and exits the program.
 	 * @param message the message to print
