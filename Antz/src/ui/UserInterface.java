@@ -15,6 +15,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -138,10 +139,15 @@ import ai.StateMachine;
 		private void loadBrain() {
 			int r = fc.showOpenDialog(this);
 			if (r == JFileChooser.APPROVE_OPTION) {
-				File file = fc.getSelectedFile(); 
-				manager.addBrain(file.getName(), StateMachine.newInstance(file.getAbsolutePath()));
-				listModel.removeElement("No brains loaded");
-				listModel.addElement(file.getName());
+				File file = fc.getSelectedFile();
+				//	Try to add brain
+				if (manager.addBrain(file.getName(), StateMachine.newInstance(file.getAbsolutePath())))
+				{
+					listModel.removeElement("No brains loaded");
+					listModel.addElement(file.getName());
+				} else {
+					JOptionPane.showMessageDialog(this, "File IO Error!");
+				}
 			}
 			//	Check if we can start a game
 			if (manager.getTotalPlayers() > 1 && manager.getWorld() != null) {
@@ -156,7 +162,12 @@ import ai.StateMachine;
 			int r = fc.showOpenDialog(this);
 			if (r == JFileChooser.APPROVE_OPTION) {
 				File file = fc.getSelectedFile(); 
-				manager.setWorld(World.parseWorld(file.getAbsolutePath()));
+				if (manager.setWorld(World.parseWorld(file.getAbsolutePath())))
+				{
+					loadedMapLabel.setText(file.getName());
+				} else {
+					JOptionPane.showMessageDialog(this, "File IO Error!");
+				}
 			}
 			//	Check if we can start a game
 			if (manager.getTotalPlayers() > 1 && manager.getWorld() != null) {

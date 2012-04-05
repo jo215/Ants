@@ -38,7 +38,7 @@ public class StateMachine {
 	
 	/**
 	 * Factory method. Parses an ant brain text file.
-	 * Using a Factory we always make sure the StateMachine is set up correctly.
+	 * Using a Factory we always make sure the StateMachine is set up correctly, else return null;
 	 * @param string the file to parse
 	 */
 	public static StateMachine newInstance(String fileName) {
@@ -66,9 +66,8 @@ public class StateMachine {
 				currentState ++;
 			}
 		} catch (Exception e) {
-			System.out.println("File I/O error with Ant Brain: " + fileName);
-			e.printStackTrace();
-			System.exit(0);
+			//	Problem reading file - handle elsewhere
+			return null;
 		}
 		//	StateMachine is fully populated & validated
 		return sm;
@@ -96,7 +95,7 @@ public class StateMachine {
 	 * @param tokens the array of String tokens
 	 * @return the concrete AIState
 	 */
-	public State_Abstract addState(String[] tokens) {
+	private State_Abstract addState(String[] tokens) {
 		//	tokens[0] is the instruction for this state
 		if (!E_Instruction.valid().contains(E_Instruction.valueOf(tokens[0]))) {
 			Main.error("Error : unknown instruction: " + tokens[0]); 

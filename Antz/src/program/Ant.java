@@ -24,6 +24,7 @@ public class Ant {
 	private int resting;				//	Track of how long we have to rest after a move
 	private E_Direction direction;		//	The direction this ant is facing
 	private boolean hasFood;			//	True if ant is carrying a food particle
+	private boolean isAlive;			//	true if this ant is alive
 	
 	/**
 	 * Constructor.
@@ -38,6 +39,7 @@ public class Ant {
 		this.currentState = 0;
 		hasFood = false;
 		resting = 0;
+		setAlive(true);
 		//	TODO : What direction should we start in?
 	}
 
@@ -109,7 +111,7 @@ public class Ant {
 	 * Gets if this ant is carrying food.
 	 * @return true if carrying food, false otherwise
 	 */
-	public boolean isHasFood() {
+	public boolean hasFood() {
 		return hasFood;
 	}
 
@@ -127,6 +129,22 @@ public class Ant {
 	 */
 	public int getId() {
 		return id;
+	}
+
+	/**
+	 * Returns true if this ant is alive.
+	 * @return
+	 */
+	public boolean isAlive() {
+		return isAlive;
+	}
+
+	/**
+	 * Sets this ant to dead or alive
+	 * @param true if this ant should live, false otherwise
+	 */
+	public void setAlive(boolean isAlive) {
+		this.isAlive = isAlive;
 	}
 		 
 	

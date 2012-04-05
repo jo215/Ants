@@ -45,6 +45,8 @@ public class GameManager {
 	 * @return true if succeeded, false if a brain with the same name is already loaded.
 	 */
 	public boolean addBrain(String name, StateMachine brain) {
+		if (brain == null)
+			return false;
 		if (playerBrains.containsKey(name))
 			return false;
 		playerBrains.put(name, brain);
@@ -100,7 +102,10 @@ public class GameManager {
 		return world;
 	}
 
-	public void setWorld(World world) {
+	public boolean setWorld(World world) {
+		if (world == null)
+			return false;
 		this.world = world;
+		return true;
 	}
 }
