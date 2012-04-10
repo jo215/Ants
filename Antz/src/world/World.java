@@ -16,7 +16,7 @@ import program.Ant;
 /**
  * Represents an Ant world.
  * @author JOH
- * @version 0.1
+ * @version 0.2
  */
 public class World {
 	
@@ -32,6 +32,11 @@ public class World {
 		ants = new ArrayList<>();
 		redBrain = null;
 		blackBrain = null;
+		for (int i = 0; i < cells.length; i ++) {
+			for (int j= 0 ; j < cells[0].length; j ++) {
+				cells[i][j].setWorld(this);
+			}
+		}
 	}
 	
 	/**
@@ -183,12 +188,12 @@ public class World {
 	}
 	
 	/**
-	 * Returns the position of the adjacent cell in the given direction.
+	 * Returns the adjacent cell in the given direction.
 	 * @param p the current position
 	 * @param dir the direction
 	 * @return the position of the adjacent cell in the given direction, or null if off the map
 	 */
-	public Position adjacentCell(Position p, E_Direction dir) {
+	public Cell adjacentCell(Position p, E_Direction dir) {
 		Position adjacent = null;
 		switch (dir) {
 			case EAST:
@@ -225,7 +230,7 @@ public class World {
 		//	Check calculated position is not off the map
 		if (adjacent.x < 0 || adjacent.x > cells.length || adjacent.y < 0 || adjacent.y > cells[0].length)
 			return null;
-		return adjacent;
+		return cells[adjacent.x][adjacent.y];
 	}
 	
 	/**
@@ -255,25 +260,25 @@ public class World {
 			//	Now read y lines of length x
 			for (int i = 0; i < y; i++) {
 				line = br.readLine();
-				line.replace(" ", "");
+				line = line.replace(" ", "");
 				if (line.length() != x)
 					throw new IllegalArgumentException();
 				for (int j = 0; j < x; j ++) {
 					switch (line.charAt(j)){
 						case '.':			//	Clear cell
-							cells[j][i] = new Cell(E_Terrain.CLEAR, 0, new Position(x, y));
+							cells[j][i] = new Cell(E_Terrain.CLEAR, 0, new Position(j, i));
 							break;
 						case '#':			//	Rocky cell
-							cells[j][i] = new Cell(E_Terrain.ROCKY, 0, new Position(x, y));
+							cells[j][i] = new Cell(E_Terrain.ROCKY, 0, new Position(j, i));
 							break;
 						case '+':			//	Red anthill
-							cells[j][i] = new Cell(E_Terrain.RED_ANTHILL, 0, new Position(x, y));
+							cells[j][i] = new Cell(E_Terrain.RED_ANTHILL, 0, new Position(j, i));
 							break;	
 						case '-':			//	Black anthill
-							cells[j][i] = new Cell(E_Terrain.BLACK_ANTHILL, 0, new Position(x, y));
+							cells[j][i] = new Cell(E_Terrain.BLACK_ANTHILL, 0, new Position(j, i));
 							break;
 						default:			//	Clear cell with food
-							cells[j][i] = new Cell(E_Terrain.CLEAR, Character.getNumericValue(line.charAt(j)), new Position(x, y));
+							cells[j][i] = new Cell(E_Terrain.CLEAR, Character.getNumericValue(line.charAt(j)), new Position(j, i));
 							break;
 					}
 				}
