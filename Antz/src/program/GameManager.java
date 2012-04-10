@@ -9,7 +9,7 @@ import ai.StateMachine;
 /**
  * Manages the players, games and world which comprise an Ant tournament.
  * @author JOH
- * @version 0.1
+ * @version 0.2
  */
 public class GameManager {
 
@@ -98,10 +98,19 @@ public class GameManager {
 		return playerBrains.size(); 	
 	}
 
+	/**
+	 * Returns the current world.
+	 * @return
+	 */
 	public World getWorld() {
 		return world;
 	}
 
+	/**
+	 * Sets the current world.
+	 * @param world
+	 * @return
+	 */
 	public boolean setWorld(World world) {
 		if (world == null)
 			return false;
