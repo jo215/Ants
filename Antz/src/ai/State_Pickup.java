@@ -1,6 +1,7 @@
 package ai;
 
 import program.Ant;
+import world.Cell;
 import enums.E_Instruction;
 
 /**
@@ -28,9 +29,16 @@ public class State_Pickup extends State_Abstract {
 	 * Pickup food from current cell and goto state1; goto state2 if there is no food in the current cell.
 	 */
 	@Override
-	public void step(Ant ant) {
-		// TODO Auto-generated method stub
-
+	public void step(Ant ant, Cell cell) {
+		if (cell.getFoodAmount() > 0 &! ant.hasFood())
+		{
+			//	This cell has food and the ant is not currently carrying any
+			ant.setHasFood(true);
+			cell.setFoodAmount(cell.getFoodAmount() - 1);
+			ant.setCurrentState(state1);
+		} else {
+			//	Either this cell has no food or ant is already carrying some
+			ant.setCurrentState(state2);
+		}
 	}
-
 }

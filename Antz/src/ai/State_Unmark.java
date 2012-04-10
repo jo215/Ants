@@ -1,6 +1,7 @@
 package ai;
 
 import program.Ant;
+import world.Cell;
 import enums.E_Instruction;
 
 /**
@@ -25,12 +26,14 @@ public class State_Unmark extends State_Abstract {
 	}
 
 	/**
-	 * Clear mark marker in current cell and goto state1.
+	 * Clear marker in current cell and goto state1.
 	 */
 	@Override
-	public void step(Ant ant) {
-		// TODO Auto-generated method stub
-
+	public void step(Ant ant, Cell cell) {
+		if (cell.checkMarker(ant.getColor(), marker)) {
+			cell.clearMarker(ant.getColor(), marker);
+		}
+		ant.setCurrentState(state1);
 	}
 
 }

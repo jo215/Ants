@@ -2,6 +2,7 @@ package ai;
 
 import program.Ant;
 import program.Main;
+import world.Cell;
 import enums.E_Condition;
 import enums.E_Instruction;
 import enums.E_LeftOrRight;
@@ -11,7 +12,7 @@ import enums.E_SenseDirection;
  * Represents a single state in an Ant-Brain StateMachine.
  * This class should be extended with a concrete implementation.
  * @author JOH
- *
+ * @version 0.2
  */
 
 public abstract class State_Abstract {
@@ -37,9 +38,9 @@ public abstract class State_Abstract {
 	/**
 	 * Implement this method in each inheriting state to run state logic.
 	 */
-	public abstract void step(Ant ant);
+	public abstract void step(Ant ant, Cell cell);
 	{
-		//TODO Also need to pass in the cell location this ant is at 
+
 	}
 	
 	//
