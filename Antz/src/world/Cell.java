@@ -1,5 +1,6 @@
 package world;
 
+
 import program.Ant;
 import enums.E_Color;
 import enums.E_Terrain;
@@ -7,7 +8,7 @@ import enums.E_Terrain;
 /**
  * Represents an individual map cell in an Ant world.
  * @author JOH
- * @version 0.1
+ * @version 0.2
  *
  */
 public class Cell {
@@ -18,6 +19,7 @@ public class Cell {
 	private boolean[] redMarkers;		//	Red markers at this cell
 	private boolean[] blackMarkers;		//	Black markers at this cell
 	private Position position;			//	The x/y coordinates of this cell
+	private World world;					//	The map this cell is within
 	
 	/**
 	 * Constructor.
@@ -170,6 +172,22 @@ public class Cell {
 	 */
 	public void setPosition(Position position) {
 		this.position = position;
+	}
+
+	/**
+	 * Gets the world this cell is within.
+	 * @return
+	 */
+	public World getWorld() {
+		return world;
+	}
+
+	/**
+	 * Sets the world this cell is within.
+	 * @param world
+	 */
+	public void setWorld(World world) {
+		this.world = world;
 	}
 	
 }
