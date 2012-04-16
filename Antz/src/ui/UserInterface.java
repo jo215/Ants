@@ -62,7 +62,13 @@ import ai.StateMachine;
 		    this.setResizable(false);	//	The layout manager makes things look rubbish if resized
 		    this.pack();
 		    this.setVisible(true);  
+		
+		    // very hacky way of testing map generation
+		    manager.setWorld(World.generateMap());
+		
 		}
+		
+		
 	
 		/**
 		 * The panel which shows the currently loaded map and brains.
