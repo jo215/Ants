@@ -1,6 +1,7 @@
 package ai;
 
 import program.Ant;
+import world.Cell;
 import enums.E_Instruction;
 
 /**
@@ -28,9 +29,9 @@ public class State_Mark extends State_Abstract {
 	 * Set mark marker in current cell and goto state1
 	 */
 	@Override
-	public void step(Ant ant) {
-		// TODO Auto-generated method stub
-
+	public void step(Ant ant, Cell cell) {
+		cell.setMarker(ant.getColor(), marker);
+		ant.setCurrentState(state1);
 	}
 
 }

@@ -1,6 +1,9 @@
 package ai;
 
 import program.Ant;
+import program.Main;
+import world.Cell;
+import enums.E_Direction;
 import enums.E_Instruction;
 import enums.E_LeftOrRight;
 
@@ -29,9 +32,27 @@ public class State_Turn extends State_Abstract {
 	 * Turn left or right and goto state1.
 	 */
 	@Override
-	public void step(Ant ant) {
-		// TODO Auto-generated method stub
-
+	public void step(Ant ant, Cell cell) {
+		int i;
+		switch (leftOrRight) {
+			case LEFT:
+				i = ant.getDirection().ordinal() - 1;
+				if (i < 0)
+					i = 5;
+				ant.setDirection(E_Direction.class.getEnumConstants()[i]);
+				break;
+			case RIGHT:
+				i = ant.getDirection().ordinal() + 1;
+				if (i > 5)
+					i = 0;
+				ant.setDirection(E_Direction.class.getEnumConstants()[i]);
+				break;			
+			default:
+				//	Shouldn't get here!
+				Main.error("Unknown sense direction!");
+				break;
+		}
+		ant.setCurrentState(state1);
 	}
 
 }

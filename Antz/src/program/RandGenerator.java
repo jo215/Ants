@@ -1,29 +1,27 @@
 package program;
 
-import java.util.ArrayList;
-
 /**
  * Implements a pseudo-RNG to customer specification.
  * @author JOH
- * @version 0.11
+ * @version 0.2
  *
  */
 public class RandGenerator {
 
-	private long seed;		//	The sequence of random number seeds
+	private static long seed = 12345;		//	The sequence of random number seeds
 	
 	/**
 	 * Constructor.
 	 * 
-	 * @param seed the initial seed for the RNG
+	 * @param newSeed the initial seed for the RNG
 	 */
-	public RandGenerator(long seed)
+	public static void setSeed(long newSeed)
 	{
-		this.seed = seed;
+		RandGenerator.seed = newSeed;
 		//	Add the first three values
 		for (int i = 1; i < 4; i++)
 		{
-			this.seed = this.seed * 22695477 + 1;
+			RandGenerator.seed = RandGenerator.seed * 22695477 + 1;
 		}
 	}
 	
@@ -32,7 +30,7 @@ public class RandGenerator {
 	 * @param n the range of the number to generate
 	 * @return the random number
 	 */
-	public long randomInt(int n)
+	public static int randomInt(int n)
 	{
 		seed = seed * 22695477 + 1;
 
@@ -41,8 +39,8 @@ public class RandGenerator {
 		//	Account for Java modulus behavior 
 		if (x % n >= 0)
 		{
-			return x % n;
+			return (int)x % n;
 		}
-		return (x % n) + (n-1);
+		return (int) (x % n) + (n-1);
 	}
 }

@@ -20,7 +20,7 @@ import program.Ant;
 /**
  * Represents an Ant world.
  * @author JOH
- * @version 0.1
+ * @version 0.2
  */
 public class World {
 	
@@ -36,6 +36,11 @@ public class World {
 		ants = new ArrayList<>();
 		redBrain = null;
 		blackBrain = null;
+		for (int i = 0; i < cells.length; i ++) {
+			for (int j= 0 ; j < cells[0].length; j ++) {
+				cells[i][j].setWorld(this);
+			}
+		}
 	}
 	
 	/**
@@ -187,12 +192,12 @@ public class World {
 	}
 	
 	/**
-	 * Returns the position of the adjacent cell in the given direction.
+	 * Returns the adjacent cell in the given direction.
 	 * @param p the current position
 	 * @param dir the direction
 	 * @return the position of the adjacent cell in the given direction, or null if off the map
 	 */
-	public Position adjacentCell(Position p, E_Direction dir) {
+	public Cell adjacentCell(Position p, E_Direction dir) {
 		Position adjacent = null;
 		switch (dir) {
 			case EAST:
@@ -229,7 +234,7 @@ public class World {
 		//	Check calculated position is not off the map
 		if (adjacent.x < 0 || adjacent.x > cells.length || adjacent.y < 0 || adjacent.y > cells[0].length)
 			return null;
-		return adjacent;
+		return cells[adjacent.x][adjacent.y];
 	}
 	
 	/**
@@ -668,13 +673,10 @@ public class World {
 			for (int i = 0; i < y; i++) {
 				line = br.readLine();
 				line = line.replace(" ", "");
-				System.out.println(line);
-				System.out.println(line.length());
 				if (line.length() != x)
 					throw new IllegalArgumentException();
 					
 				for (int j = 0; j < x; j ++) {
-					System.out.println(line.charAt(j));
 					switch (line.charAt(j)){
 						case '.':			//	Clear cell
 							cells[j][i] = new Cell(E_Terrain.CLEAR, 0, new Position(j, i));
