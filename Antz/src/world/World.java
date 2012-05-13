@@ -40,6 +40,32 @@ public class World {
 	}
 	
 	/**
+	 * Returns a specific cell.
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 * @return
+	 */
+	public Cell getCellAt(Position pos) {
+		return cells[pos.x][pos.y];
+	}
+	
+	/**
+	 * Returns the width of the world.
+	 * @return
+	 */
+	public int getWidth() {
+		return cells.length;
+	}
+	
+	/**
+	 * Returns the height of the world.
+	 * @return
+	 */
+	public int getHeight() {
+		return cells[0].length;
+	}
+	
+	/**
 	 * Checks if any ant is at a particular location.
 	 * @param x the x-coordinate
 	 * @param y the y coordinate
@@ -285,7 +311,8 @@ public class World {
 			}
 			return new World(cells);
 		} catch (Exception e) {
-			//	Problem with input - handle elsewhere
+			System.out.println("Error parsing world file.");
+			e.printStackTrace();
 			return null;
 		}
 	}
