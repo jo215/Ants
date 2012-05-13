@@ -19,7 +19,7 @@ public class Cell {
 	private boolean[] redMarkers;		//	Red markers at this cell
 	private boolean[] blackMarkers;		//	Black markers at this cell
 	private Position position;			//	The x/y coordinates of this cell
-	private World world;					//	The map this cell is within
+	private World world;				//	The map this cell is within
 	
 	/**
 	 * Constructor.
