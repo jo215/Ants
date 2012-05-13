@@ -2,7 +2,8 @@ package program;
 
 import java.util.HashMap;
 
-import ui.UserInterface;
+import ui.GameplayScreen;
+import ui.TournamentScreen;
 import world.World;
 import ai.StateMachine;
 
@@ -13,6 +14,7 @@ import ai.StateMachine;
  */
 public class GameManager {
 
+	private boolean debug = true;
 	// The set of uploaded brains - identified by their filename
 	private HashMap<String, StateMachine> playerBrains;
 	private HashMap<String, Integer> playerScores;
@@ -26,8 +28,17 @@ public class GameManager {
 		playerBrains = new HashMap<>();
 		playerScores = new HashMap<>();
 		setWorld(null);
-		
-		UserInterface ui = new UserInterface(this);
+		if (debug)
+		{
+			setWorld(World.parseWorld("sample0.world"));
+			world.setBlackBrain(StateMachine.newInstance("crapBrain.txt"));
+			world.setRedBrain(StateMachine.newInstance("exampleBrain.txt"));
+			playerBrains.put("crapBrain.txt", world.getBlackBrain());
+			playerBrains.put("exampleBrain.txt", world.getRedBrain());
+			GameplayScreen ui = new GameplayScreen(this);
+		} else {
+			TournamentScreen ui = new TournamentScreen(this);
+		}
 	}
 	
 	/**
