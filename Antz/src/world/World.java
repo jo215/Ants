@@ -13,6 +13,7 @@ import enums.E_Terrain;
 import ai.StateMachine;
 
 import program.Ant;
+import ui.GameplayScreen;
 /**
  * Represents an Ant world.
  * @author JOH
@@ -23,20 +24,80 @@ public class World {
 	private Cell[][] cells;							//	The grid of cells which comprise this world
 	private ArrayList<Ant> ants;					//	The ants in the world
 	private StateMachine redBrain, blackBrain;		//	The two opposing player brains
+	private GameplayScreen screen;
+	private static final int MAXTURNS = 300000;
+	private int sleepAmount = 0;
 	
 	/**
 	 * Private constructor.
 	 */
 	private World(Cell[][] cells) {
 		this.cells = cells;
-		ants = new ArrayList<>();
-		redBrain = null;
-		blackBrain = null;
 		for (int i = 0; i < cells.length; i ++) {
 			for (int j= 0 ; j < cells[0].length; j ++) {
 				cells[i][j].setWorld(this);
 			}
 		}
+	}
+	
+	/**
+	 * Starts a new game
+	 */
+	public void beginGame(StateMachine redBrain, StateMachine blackBrain) {
+		ants = new ArrayList<>();
+		this.blackBrain = blackBrain;
+		this.redBrain = redBrain;
+		this.screen = new GameplayScreen(this);
+		setStartingAnts();
+		update();
+	}
+	
+	/**
+	 * Sets up the initial ants in the world.
+	 */
+	private void setStartingAnts() {
+		for (int i = 0; i < cells.length; i ++) {
+			for (int j= 0 ; j < cells[0].length; j ++) {
+				if (cells[i][j].getTerrain() == E_Terrain.BLACK_ANTHILL) {
+					Ant ant = new Ant(E_Color.BLACK, blackBrain);
+					setAntAt(new Position(i, j), ant);
+					ants.add(ant);
+				} else if (cells[i][j].getTerrain() == E_Terrain.RED_ANTHILL) {
+					Ant ant = new Ant(E_Color.RED, redBrain);
+					setAntAt(new Position(i, j), ant);
+					ants.add(ant);
+				}
+			}
+		}		
+	}
+
+	/**
+	 * Runs a single turn of the game.
+	 */
+	private void update() {
+		for (int turn = 0; turn < MAXTURNS; turn++) {
+			for (Ant ant : ants) {
+				if (ant.isAlive()) {
+					if (ant.getResting() > 0) {
+						ant.setResting(ant.getResting() - 1);
+					} else {
+						Position p = this.findAnt(ant.getId());
+						Cell cell = cells[p.x][p.y];
+						ant.getStateMachine().step(ant, cell);
+					}
+				}
+			}
+			//	Update the display
+			screen.update();
+			//	Variable speed
+			try {
+				Thread.sleep(sleepAmount);
+			} catch (InterruptedException e) {
+				// Surely not a problem...
+				e.printStackTrace();
+			}
+		}
+		
 	}
 	
 	/**
@@ -124,7 +185,7 @@ public class World {
 	public Position findAnt(int id) {
         for (int x = 0; x < cells.length; x++)
             for (int y = 0; y < cells[x].length; y++)
-            	if (cells[x][y].getAnt().getId() == id)
+            	if (cells[x][y].getAnt() != null && cells[x][y].getAnt().getId() == id)
             		return cells[x][y].getPosition();
         return null;
 	}
@@ -356,6 +417,16 @@ public class World {
 	 */
 	public void setBlackBrain(StateMachine blackBrain) {
 		this.blackBrain = blackBrain;
+	}
+
+
+	public GameplayScreen getScreen() {
+		return screen;
+	}
+
+
+	public void setScreen(GameplayScreen screen) {
+		this.screen = screen;
 	}
 
 }
