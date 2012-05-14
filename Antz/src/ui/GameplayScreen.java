@@ -19,19 +19,20 @@ import world.World;
 
 public class GameplayScreen extends JFrame {
 
-	private GameManager gameManager;
+
 	private MapPanel mapPanel;
-	private World world;
+	private final World world;
 	
 	/**
 	 * Constructor.
 	 * @param manager the manager running the current game.
 	 */
-	public GameplayScreen(GameManager manager)
+	public GameplayScreen(final World world)
 	{
 		super("Antz");
-		gameManager = manager;
-		this.world = manager.getWorld();
+
+		this.world = world;
+		
 	    Container pane = this.getContentPane();
 	    JPanel mainPanel = new JPanel(new BorderLayout());
 	    pane.add(mainPanel);	
@@ -88,5 +89,13 @@ public class GameplayScreen extends JFrame {
 	    this.setResizable(true);
 	    this.pack();
 	    this.setVisible(true);  
+	}
+	
+	/**
+	 * Called when we need to update the world display.
+	 */
+	public void update()
+	{
+		mapPanel.repaint();
 	}
 }
