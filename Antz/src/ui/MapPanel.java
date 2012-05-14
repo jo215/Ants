@@ -4,8 +4,11 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 
+import program.Ant;
+
 import world.Position;
 import world.World;
+import enums.E_Color;
 import enums.E_Terrain;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -23,10 +26,12 @@ public class MapPanel extends JLabel{
 	private GameplayScreen screen;
 	private World world;
 	private int zoomLevel;
+	private boolean drawMarkers;
 	
 	private static BufferedImage rocky_big, clear_big, anthill_big,
 						rocky_small, clear_small, anthill_small,
 						rocky_tiny, clear_tiny, anthill_tiny;
+	private static BufferedImage[][] bigAnts, smallAnts, tinyAnts;
 	
 	public static final int imageWidth = 72;
 	public static final int imageHeight = 84;
@@ -44,16 +49,27 @@ public class MapPanel extends JLabel{
 		this.world = world;
 		zoomLevel = 1;
 		this.setPreferredSize(new Dimension(world.getWidth() * imageWidth , world.getHeight() * (imageHeight-20)));
-		
+		drawMarkers = false;
 		/**
 		 * Drag map functionality
 		 */
 		MapDragListener dragListener = new MapDragListener();
 		addMouseMotionListener(dragListener);
 		addMouseListener(dragListener);
-		
+		bigAnts = new BufferedImage[2][6];
+		smallAnts = new BufferedImage[2][6];
+		tinyAnts = new BufferedImage[2][6];
 		//	Load images
+		String[] colorS = {"redant", "blackant"};
+		String[] directionS = {"_E_", "_SE_", "_SW_", "_W_", "_NW_", "_NE_"};
 		try {
+			for (int color = 0; color < 2; color ++) {
+				for(int direction = 0; direction < 6; direction++) {
+					bigAnts[color][direction] = ImageIO.read(new File("Images/" + colorS[color] + directionS[direction] + "big.gif"));
+					smallAnts[color][direction] = ImageIO.read(new File("Images/" + colorS[color] + directionS[direction] + "small.gif"));
+					tinyAnts[color][direction] = ImageIO.read(new File("Images/" + colorS[color] + directionS[direction] + "tiny.gif"));
+				}
+			}
 			rocky_big = ImageIO.read(new File("Images/rocky_big.gif"));
 			clear_big = ImageIO.read(new File("Images/clear_big.gif"));
 			anthill_big = ImageIO.read(new File("Images/anthill_big.gif"));
@@ -80,26 +96,29 @@ public class MapPanel extends JLabel{
 		//	clear screen
 		g2d.setColor(Color.BLACK);
 		g2d.fillRect(0, 0, this.getWidth(), this.getHeight());	
-		g2d.setColor(Color.YELLOW);
 		//	Choose image sizes based on zoom level
 		BufferedImage rocky = null, clear = null, anthill = null;
+		BufferedImage[][] ants = null;
 		switch (zoomLevel) {
 		case 1: 
 			rocky = rocky_big;
 			clear = clear_big;
 			anthill = anthill_big;
+			ants = bigAnts;
 			g2d.setFont(bigFont);
 			break;
 		case 2:
 			rocky = rocky_small;
 			clear = clear_small;
 			anthill = anthill_small;
+			ants = smallAnts;
 			g2d.setFont(smallFont);
 			break;
 		case 4:
 			rocky = rocky_tiny;
 			clear = clear_tiny;
 			anthill = anthill_tiny;
+			ants = tinyAnts;
 			g2d.setFont(tinyFont);
 			break;
 		}
@@ -135,9 +154,35 @@ public class MapPanel extends JLabel{
 						break;
 				}
 				//	Draw food particles if applicable
-				if (world.foodAt(pos) > 0)
+				if (world.foodAt(pos) > 0) {
+					g2d.setColor(Color.YELLOW);
 					g2d.drawString("" + world.foodAt(pos), xPos, yPos);
+				}
+				if (drawMarkers == true) {
+				//	Draw markers?
+					if (world.getCellAt(pos).checkAnyMarker(E_Color.BLACK)) {
+						g2d.setColor(Color.BLACK);
+						for (int i = 0; i < 6; i++) {
+							if (world.getCellAt(pos).checkMarker(E_Color.BLACK, i)) {
+								g2d.drawString("" + i, xPos, yPos);
+							}
+						}
+					}
+				
+					if (world.getCellAt(pos).checkAnyMarker(E_Color.RED)) {
+						g2d.setColor(Color.RED);
+						for (int i = 0; i < 6; i++) {
+							if (world.getCellAt(pos).checkMarker(E_Color.RED, i)) {
+								g2d.drawString("" + i, xPos, yPos);
+							}
+						}
+					}
+				}
 				//	Draw any ants
+				if (world.antAt(pos) != null) {
+					Ant ant = world.antAt(pos);
+					g2d.drawImage(ants[ant.getColor().ordinal()][ant.getDirection().ordinal()], xPos, yPos, null);
+				}
 			}
 		}
 	}
