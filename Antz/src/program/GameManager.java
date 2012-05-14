@@ -31,11 +31,11 @@ public class GameManager {
 		if (debug)
 		{
 			setWorld(World.parseWorld("sample0.world"));
-			world.setBlackBrain(StateMachine.newInstance("crapBrain.txt"));
-			world.setRedBrain(StateMachine.newInstance("exampleBrain.txt"));
-			playerBrains.put("crapBrain.txt", world.getBlackBrain());
-			playerBrains.put("exampleBrain.txt", world.getRedBrain());
-			GameplayScreen ui = new GameplayScreen(this);
+			StateMachine blackBrain = StateMachine.newInstance("crapBrain.txt");
+			StateMachine redBrain = StateMachine.newInstance("exampleBrain.txt");
+			playerBrains.put("crapBrain.txt", blackBrain);
+			playerBrains.put("exampleBrain.txt", redBrain);
+			world.beginGame(redBrain, blackBrain);
 		} else {
 			TournamentScreen ui = new TournamentScreen(this);
 		}
