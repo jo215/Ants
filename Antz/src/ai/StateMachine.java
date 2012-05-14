@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import program.Ant;
 import program.Main;
+import world.Cell;
 
 import enums.E_Instruction;
 
@@ -24,16 +25,15 @@ public class StateMachine {
 	 * Private Constructor. Sets up an empty state machine.
 	 */
 	private StateMachine() {
+		states = new ArrayList<>();
 	}
 	
 	/**
 	 * Given an ant, gets and executes the next instruction. 
 	 * @param ant
 	 */
-	public void step(Ant ant) {
-		//TODO also need to pass in the cell object as an argument.
-		
-		//	All the kinetics logic can then be implemented her, calling step for each ant's state, as appropriate
+	public void step(Ant ant, Cell cell) {
+		states.get(ant.getCurrentState()).step(ant, cell);
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public class StateMachine {
 				//	Split a single line of text into tokens separated by SPACE or TAB
 				String[] tokens = line.toUpperCase().split(" |\t");
 				//	Send these to method to parse and add the state object
-				sm.addState(tokens);
+				sm.states.add(sm.createState(tokens));
 				System.out.println("OK");
 				//	Get next line
 				line = br.readLine();
@@ -91,11 +91,11 @@ public class StateMachine {
 	}
 
 	/**
-	 * Creates a concrete AIState object from a tokenized String input array and adds it to the end of the state machine instruction list.
+	 * Creates a concrete AIState object from a tokenized String input array.
 	 * @param tokens the array of String tokens
 	 * @return the concrete AIState
 	 */
-	private State_Abstract addState(String[] tokens) {
+	private State_Abstract createState(String[] tokens) {
 		//	tokens[0] is the instruction for this state
 		if (!E_Instruction.valid().contains(E_Instruction.valueOf(tokens[0]))) {
 			Main.error("Error : unknown instruction: " + tokens[0]); 
