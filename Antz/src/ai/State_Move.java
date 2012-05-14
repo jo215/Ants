@@ -45,6 +45,7 @@ public class State_Move extends State_Abstract {
 			cell.setAnt(null);
 			forward.setAnt(ant);
 			ant.setCurrentState(state1);
+			ant.setResting(14);
 		}
 	}
 }
