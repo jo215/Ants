@@ -29,7 +29,9 @@ public class Cell {
 	public Cell(E_Terrain terrain, int foodAmount, Position position) {
 		this.terrain = terrain;
 		this.foodAmount = foodAmount;
-		this.setPosition(position);
+		setPosition(position);
+		redMarkers = new boolean[6];
+		blackMarkers = new boolean[6];
 	}
 	
 	/**
