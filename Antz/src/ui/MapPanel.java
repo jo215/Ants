@@ -31,7 +31,7 @@ public class MapPanel extends JLabel{
 	private static BufferedImage rocky_big, clear_big, anthill_big,
 						rocky_small, clear_small, anthill_small,
 						rocky_tiny, clear_tiny, anthill_tiny;
-	private static BufferedImage[][] bigAnts, smallAnts, tinyAnts;
+	public static BufferedImage[][] bigAnts, smallAnts, tinyAnts;
 	
 	public static final int imageWidth = 72;
 	public static final int imageHeight = 84;
@@ -45,6 +45,7 @@ public class MapPanel extends JLabel{
 	 */
 	public MapPanel(GameplayScreen screen, World world)
 	{
+		super();
 		this.screen = screen;
 		this.world = world;
 		zoomLevel = 1;
@@ -226,9 +227,7 @@ public class MapPanel extends JLabel{
 		}
 		public void mouseMoved(MouseEvent e) {
 			if (getMousePosition() != null) {
-				int x = getMousePosition().x / zoomLevel;
-				int y = getMousePosition().y / zoomLevel;
-				setToolTipText("Hello " + x + "/" + y);
+				
 			}
 		}
 		public void mousePressed(MouseEvent e) {
