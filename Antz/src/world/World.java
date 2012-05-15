@@ -24,9 +24,11 @@ public class World {
 	private Cell[][] cells;							//	The grid of cells which comprise this world
 	private ArrayList<Ant> ants;					//	The ants in the world
 	private StateMachine redBrain, blackBrain;		//	The two opposing player brains
+	private int redScore, blackScore;				//	Running total of scores
 	private GameplayScreen screen;
 	private static final int MAXTURNS = 300000;
 	private int sleepAmount = 0;
+
 	
 	/**
 	 * Private constructor.
@@ -34,7 +36,7 @@ public class World {
 	private World(Cell[][] cells) {
 		this.cells = cells;
 		for (int i = 0; i < cells.length; i ++) {
-			for (int j= 0 ; j < cells[0].length; j ++) {
+			for (int j = 0 ; j < cells[0].length; j ++) {
 				cells[i][j].setWorld(this);
 			}
 		}
@@ -57,7 +59,7 @@ public class World {
 	 */
 	private void setStartingAnts() {
 		for (int i = 0; i < cells.length; i ++) {
-			for (int j= 0 ; j < cells[0].length; j ++) {
+			for (int j = 0 ; j < cells[0].length; j ++) {
 				if (cells[i][j].getTerrain() == E_Terrain.BLACK_ANTHILL) {
 					Ant ant = new Ant(E_Color.BLACK, blackBrain);
 					setAntAt(new Position(i, j), ant);
@@ -72,7 +74,7 @@ public class World {
 	}
 
 	/**
-	 * Runs a single turn of the game.
+	 * Runs a loop of the game.
 	 */
 	private void update() {
 		for (int turn = 0; turn < MAXTURNS; turn++) {
@@ -87,6 +89,7 @@ public class World {
 					}
 				}
 			}
+			calcScores();
 			//	Update the display
 			screen.update();
 			//	Variable speed
@@ -100,6 +103,23 @@ public class World {
 		
 	}
 	
+	/**
+	 * Calculates the current score (1 for each food particle at home anthill).
+	 */
+	private void calcScores() {
+		blackScore = 0;
+		redScore = 0;
+		for (int i = 0; i < cells.length; i ++) {
+			for (int j = 0 ; j < cells[0].length; j ++) {
+				if (cells[i][j].getTerrain() == E_Terrain.BLACK_ANTHILL) {
+					blackScore += cells[i][j].getFoodAmount();
+				} else if (cells[i][j].getTerrain() == E_Terrain.RED_ANTHILL) {
+					redScore += cells[i][j].getFoodAmount();
+				}
+			}
+		}
+	}
+
 	/**
 	 * Returns a specific cell.
 	 * @param x the x coordinate
@@ -429,4 +449,19 @@ public class World {
 		this.screen = screen;
 	}
 
+	public int getRedScore() {
+		return redScore;
+	}
+
+	public void setRedScore(int redScore) {
+		this.redScore = redScore;
+	}
+
+	public int getBlackScore() {
+		return blackScore;
+	}
+
+	public void setBlackScore(int blackScore) {
+		this.blackScore = blackScore;
+	}
 }
