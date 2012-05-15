@@ -20,6 +20,7 @@ import enums.E_Instruction;
 public class StateMachine {
 
 	private ArrayList<State_Abstract> states;			//	The list of states (max 10000)
+	private String name;								//	The filename
 	
 	/**
 	 * Private Constructor. Sets up an empty state machine.
@@ -43,6 +44,7 @@ public class StateMachine {
 	 */
 	public static StateMachine newInstance(String fileName) {
 		StateMachine sm = new StateMachine();
+		sm.setName(fileName);
 		//	Open the file stream
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)))) {
 			//	Read each line of the file
@@ -120,5 +122,13 @@ public class StateMachine {
 				return new State_Flip(tokens);	
 		}
 		return null;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }
