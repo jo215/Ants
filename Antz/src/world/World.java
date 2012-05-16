@@ -28,7 +28,8 @@ public class World {
 	private GameplayScreen screen;
 	private static final int MAXTURNS = 300000;
 	private int sleepAmount = 0;
-
+	private boolean isPaused;
+	private int turn;
 	
 	/**
 	 * Private constructor.
@@ -77,7 +78,15 @@ public class World {
 	 * Runs a loop of the game.
 	 */
 	private void update() {
-		for (int turn = 0; turn < MAXTURNS; turn++) {
+		for (turn = 0; turn < MAXTURNS; turn++) {
+			while(isPaused) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			for (Ant ant : ants) {
 				if (ant.isAlive()) {
 					if (ant.getResting() > 0) {
@@ -463,5 +472,25 @@ public class World {
 
 	public void setBlackScore(int blackScore) {
 		this.blackScore = blackScore;
+	}
+
+	public boolean isPaused() {
+		return isPaused;
+	}
+
+	public void setPaused(boolean isPaused) {
+		this.isPaused = isPaused;
+	}
+
+	public int getSleepAmount() {
+		return sleepAmount;
+	}
+
+	public void setSleepAmount(int sleepAmount) {
+		this.sleepAmount = sleepAmount;
+	}
+
+	public int getTurn() {
+		return turn;
 	}
 }
