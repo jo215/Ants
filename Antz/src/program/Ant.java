@@ -35,12 +35,12 @@ public class Ant {
 		this.id = nextID;
 		nextID ++;
 		this.color = color;
-		this.stateMachine = stateMachine;
+		this.setStateMachine(stateMachine);
 		this.currentState = 0;
 		hasFood = false;
 		resting = 0;
 		setAlive(true);
-		//	TODO : What direction should we start in?
+		direction = E_Direction.EAST;
 	}
 
 	/**
@@ -145,6 +145,14 @@ public class Ant {
 	 */
 	public void setAlive(boolean isAlive) {
 		this.isAlive = isAlive;
+	}
+
+	public StateMachine getStateMachine() {
+		return stateMachine;
+	}
+
+	public void setStateMachine(StateMachine stateMachine) {
+		this.stateMachine = stateMachine;
 	}
 		 
 	

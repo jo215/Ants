@@ -18,6 +18,7 @@ import enums.E_Terrain;
 import ai.StateMachine;
 
 import program.Ant;
+import ui.GameplayScreen;
 /**
  * Represents an Ant world.
  * @author JOH
@@ -28,20 +29,137 @@ public class World {
 	private Cell[][] cells;							//	The grid of cells which comprise this world
 	private ArrayList<Ant> ants;					//	The ants in the world
 	private StateMachine redBrain, blackBrain;		//	The two opposing player brains
+	private int redScore, blackScore;				//	Running total of scores
+	private GameplayScreen screen;
+	private static final int MAXTURNS = 300000;
+	private int sleepAmount = 0;
+	private boolean isPaused;
+	private int turn;
 	
 	/**
 	 * Private constructor.
 	 */
 	private World(Cell[][] cells) {
 		this.cells = cells;
-		ants = new ArrayList<>();
-		redBrain = null;
-		blackBrain = null;
 		for (int i = 0; i < cells.length; i ++) {
-			for (int j= 0 ; j < cells[0].length; j ++) {
+			for (int j = 0 ; j < cells[0].length; j ++) {
 				cells[i][j].setWorld(this);
 			}
 		}
+	}
+	
+	/**
+	 * Starts a new game
+	 */
+	public void beginGame(StateMachine redBrain, StateMachine blackBrain) {
+		System.out.println("world.beginGame()");
+		ants = new ArrayList<>();
+		this.blackBrain = blackBrain;
+		this.redBrain = redBrain;
+		this.screen = new GameplayScreen(this);
+		setStartingAnts();
+		update();
+	}
+	
+	/**
+	 * Sets up the initial ants in the world.
+	 */
+	private void setStartingAnts() {
+		System.out.println("World.setStartingAnts()");
+		for (int i = 0; i < cells.length; i ++) {
+			for (int j = 0 ; j < cells[0].length; j ++) {
+				if (cells[i][j].getTerrain() == E_Terrain.BLACK_ANTHILL) {
+					Ant ant = new Ant(E_Color.BLACK, blackBrain);
+					setAntAt(new Position(i, j), ant);
+					ants.add(ant);
+				} else if (cells[i][j].getTerrain() == E_Terrain.RED_ANTHILL) {
+					Ant ant = new Ant(E_Color.RED, redBrain);
+					setAntAt(new Position(i, j), ant);
+					ants.add(ant);
+				}
+			}
+		}		
+	}
+
+	/**
+	 * Runs a loop of the game.
+	 */
+	private void update() {
+		for (turn = 0; turn < MAXTURNS; turn++) {
+			while(isPaused) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			for (Ant ant : ants) {
+				if (ant.isAlive()) {
+					if (ant.getResting() > 0) {
+						ant.setResting(ant.getResting() - 1);
+					} else {
+						Position p = this.findAnt(ant.getId());
+						Cell cell = cells[p.x][p.y];
+						ant.getStateMachine().step(ant, cell);
+					}
+				}
+			}
+			calcScores();
+			//	Update the display
+			screen.update();
+			//	Variable speed
+			try {
+				Thread.sleep(sleepAmount);
+			} catch (InterruptedException e) {
+				// Surely not a problem...
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	/**
+	 * Calculates the current score (1 for each food particle at home anthill).
+	 */
+	private void calcScores() {
+		blackScore = 0;
+		redScore = 0;
+		for (int i = 0; i < cells.length; i ++) {
+			for (int j = 0 ; j < cells[0].length; j ++) {
+				if (cells[i][j].getTerrain() == E_Terrain.BLACK_ANTHILL) {
+					blackScore += cells[i][j].getFoodAmount();
+				} else if (cells[i][j].getTerrain() == E_Terrain.RED_ANTHILL) {
+					redScore += cells[i][j].getFoodAmount();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Returns a specific cell.
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 * @return
+	 */
+	public Cell getCellAt(Position pos) {
+		return cells[pos.x][pos.y];
+	}
+	
+	/**
+	 * Returns the width of the world.
+	 * @return
+	 */
+	public int getWidth() {
+		return cells.length;
+	}
+	
+	/**
+	 * Returns the height of the world.
+	 * @return
+	 */
+	public int getHeight() {
+		return cells[0].length;
 	}
 	
 	/**
@@ -103,7 +221,7 @@ public class World {
 	public Position findAnt(int id) {
         for (int x = 0; x < cells.length; x++)
             for (int y = 0; y < cells[x].length; y++)
-            	if (cells[x][y].getAnt().getId() == id)
+            	if (cells[x][y].getAnt() != null && cells[x][y].getAnt().getId() == id)
             		return cells[x][y].getPosition();
         return null;
 	}
@@ -728,7 +846,8 @@ public class World {
 			}
 			return new World(cells);
 		} catch (Exception e) {
-			//	Problem with input - handle elsewhere
+			System.out.println("Error parsing world file.");
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -774,4 +893,49 @@ public class World {
 		this.blackBrain = blackBrain;
 	}
 
+
+	public GameplayScreen getScreen() {
+		return screen;
+	}
+
+
+	public void setScreen(GameplayScreen screen) {
+		this.screen = screen;
+	}
+
+	public int getRedScore() {
+		return redScore;
+	}
+
+	public void setRedScore(int redScore) {
+		this.redScore = redScore;
+	}
+
+	public int getBlackScore() {
+		return blackScore;
+	}
+
+	public void setBlackScore(int blackScore) {
+		this.blackScore = blackScore;
+	}
+
+	public boolean isPaused() {
+		return isPaused;
+	}
+
+	public void setPaused(boolean isPaused) {
+		this.isPaused = isPaused;
+	}
+
+	public int getSleepAmount() {
+		return sleepAmount;
+	}
+
+	public void setSleepAmount(int sleepAmount) {
+		this.sleepAmount = sleepAmount;
+	}
+
+	public int getTurn() {
+		return turn;
+	}
 }
