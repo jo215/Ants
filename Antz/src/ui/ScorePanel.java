@@ -25,7 +25,7 @@ public class ScorePanel extends JPanel {
 	 * @param screen
 	 * @param world
 	 */
-	public ScorePanel(GameplayScreen screen, World world) {
+	public ScorePanel(World world) {
 		super();
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		///	Top panel is the player names and scores display
