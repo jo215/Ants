@@ -24,6 +24,7 @@ public class GameplayScreen extends JFrame {
 
 	private MapPanel mapPanel;
 	private ScorePanel scorePanel;
+	private ControlPanel controlPanel;
 	
 	private final World world;
 	
@@ -41,18 +42,19 @@ public class GameplayScreen extends JFrame {
 	    JPanel mainPanel = new JPanel(new BorderLayout());
 	    outerPanel.add("Center", mainPanel);
 	    
-	    //	The main map panel, within a JScrollPane
+	    //	Add the central main map panel, within a JScrollPane
 		mapPanel = new MapPanel(this, world);
 		JScrollPane scrollPane = new JScrollPane(mapPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setWheelScrollingEnabled(false);
 		scrollPane.setDoubleBuffered(true);
 		scrollPane.addMouseWheelListener(new MapScrollListener(scrollPane));
 		mainPanel.add("Center", scrollPane);
-		JPanel temp = new JPanel();
-		scorePanel = new ScorePanel(this, world);
-		temp.add(scorePanel);
-	    mainPanel.add("North", temp);
-	    mainPanel.add("South", new JPanel());
+		//	Add the scoring information to NORTH
+		scorePanel = new ScorePanel(world);
+	    mainPanel.add("North", scorePanel);
+	    //	Add the controls to SOUTH
+	    controlPanel = new ControlPanel(world);
+	    mainPanel.add("South", controlPanel);
 	    mainPanel.add("East", new JPanel());
 	    mainPanel.add("West", new JPanel());
 	    
@@ -73,6 +75,7 @@ public class GameplayScreen extends JFrame {
 		scorePanel.redScore.setText("Score: " + world.getRedScore());
 		scorePanel.blackScore.setText("Score: " + world.getBlackScore());
 		scorePanel.scoreRatio.repaint();
+		controlPanel.getCurrentTurn().setText("Turn: " + world.getTurn());
 	}
 	
 	/**
