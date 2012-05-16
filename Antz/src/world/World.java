@@ -8,6 +8,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import enums.E_Color;
 import enums.E_Condition;
@@ -238,12 +239,12 @@ public class World {
 	}
 	
 	/**
-	 * Some random way of generating a map
+	 * Generate a random map.
 	 * @return the World object
 	 */
 	public static World generateMap() {
-		int x = 144;
-		int y = 144;
+		int x = 150;
+		int y = 150;
 		Cell[][] cells = new Cell[x][y];
 		
 		// Make a rocky boarder, other cells clear
@@ -257,35 +258,41 @@ public class World {
 			}
 		}
 		
-		// Map is divided into 18x18 regions, 64 regions altogether
-		ArrayList<Integer> regions = new ArrayList<>();
-		for (int i = 0; i < 64; i++){
-			regions.add(i);
+		// create all possible origin points for 18x18 regions that the elements
+		// will be placed in
+		ArrayList<Position> origins = new ArrayList<>();
+		for (int i = 0; i <= y - 18; i += 2){ // only even rows to preserve element's shape
+			for (int j = 0; j <= x - 18; j++){
+				origins.add(new Position(j, i));
+			}
+			
 		}
 		
-		// Place elements randomly, one element per region
-		int region;
+		// Place elements randomly
+		Position origin;
 		
 		// Red Anthill
-		region = regions.remove((int)(Math.random()*regions.size()));
-		//System.out.println(region);
-		placeAnthill(cells, E_Terrain.RED_ANTHILL, region);
+		origin = origins.get((int)(Math.random()*origins.size())); // pick origin point
+		origins = clearRegion(origins, origin);  //remove relevant points from available origin points
+		placeAnthill(cells, E_Terrain.RED_ANTHILL, origin);
 		
 		// Black Anthill
-		region = regions.remove((int)(Math.random()*regions.size()));
-		//System.out.println(region);
-		placeAnthill(cells, E_Terrain.BLACK_ANTHILL, region);
+		origin = origins.get((int)(Math.random()*origins.size())); //pick origin point
+		origins = clearRegion(origins, origin);  //remove relevant points from available origin points
+		placeAnthill(cells, E_Terrain.BLACK_ANTHILL, origin);
 		
 		// Food
 		for (int i = 0; i < 11; i++){
-			region = regions.remove((int)(Math.random()*regions.size()));
-			placeFoodBlob(cells, region);
+			origin = origins.get((int)(Math.random()*origins.size())); //pick origin point
+			origins = clearRegion(origins, origin);  //remove relevant points from available origin points
+			placeFoodBlob(cells, origin);
 		}
 		
 		// Rocks
 		for (int i = 0; i < 14; i++){
-			region = regions.remove((int)(Math.random()*regions.size()));
-			placeRock(cells, region);
+			origin = origins.get((int)(Math.random()*origins.size())); //pick origin point
+			origins = clearRegion(origins, origin);  //remove relevant points from available origin points
+			placeRock(cells, origin);
 		}
 		
 		// Save map into a text file (for debugging purposes)
@@ -296,12 +303,38 @@ public class World {
 	
 	
 	/**
+	 * From arraylist of positions removes positions
+	 * with x and y between x1-18, x1+18, y1-18 and
+	 * y1+18, where x1,y1 are coordinates of the 
+	 * provided position
+	 * 
+	 * @param positions arraylist of positions
+	 * @param origin provided position with x1, y1
+	 * @return newPositions positions after the removes
+	 */
+	private static ArrayList<Position> clearRegion(ArrayList<Position> positions, Position origin){		
+		Iterator<Position> itr = positions.iterator();
+		Position pos;
+		while (itr.hasNext()) {
+			pos = itr.next();
+			if((origin.x - 18 < pos.x) && (pos.x < origin.x + 18) && 
+					(origin.y - 18 < pos.y) && (pos.y < origin.y + 18)) {
+				itr.remove();
+			}
+		}
+		
+		return positions;
+	}
+	
+	
+	/**
 	 * Places a rock in a given region of the map
 	 * 
 	 * @param cells the map to place the rock on
-	 * @param region the region of the map
+	 * @param origin upper left corner of the 18x18 region of the map
+	 * that the rock would be placed in
 	 */
-	private static void placeRock(Cell[][] cells, int region){
+	private static void placeRock(Cell[][] cells, Position origin){
 		ArrayList<Position> rock = new ArrayList<>();
 		// Select rock shape at random 
 		int rockType = (int)(7*Math.random());
@@ -501,11 +534,9 @@ public class World {
 		}
 		
 		// Place the rock
-		int xShift = (region%8)*18;
-		int yShift = (region/8)*18;
 		for (Position pos : rock){
-			cells[pos.x+xShift][pos.y+yShift] = new Cell(E_Terrain.ROCKY, 
-					0, new Position(pos.x+xShift, pos.y+yShift));
+			cells[pos.x + origin.x][pos.y + origin.y] = new Cell(E_Terrain.ROCKY, 
+					0, new Position(pos.x + origin.x, pos.y + origin.y));
 		}
 		
 	}
@@ -515,9 +546,10 @@ public class World {
 	 * region of the map
 	 * 
 	 * @param cells map to place the food blob on
-	 * @param region the region of the map
+	 * @param origin upper left corner of the 18x18 region of the map
+	 * that the food blob would be placed in
 	 */
-	private static void placeFoodBlob(Cell[][] cells, int region){
+	private static void placeFoodBlob(Cell[][] cells, Position origin){
 		Position[] foodBlob = new Position[25];
 		int ind = 0;
 		for (int i = 6; i < 11; i++){
@@ -528,11 +560,9 @@ public class World {
 		}
 		
 		// Place the food
-		int xShift = (region%8)*18;
-		int yShift = (region/8)*18;
 		for (Position pos : foodBlob){
-			cells[pos.x+xShift][pos.y+yShift] = new Cell(E_Terrain.CLEAR, 
-					5, new Position(pos.x+xShift, pos.y+yShift));
+			cells[pos.x + origin.x][pos.y + origin.y] = new Cell(E_Terrain.CLEAR, 
+					5, new Position(pos.x + origin.x, pos.y + origin.y));
 		}
 		
 	}
@@ -543,9 +573,10 @@ public class World {
 	 * 
 	 * @param cells map to place the anthill on
 	 * @param anthillType type of anthill to place
-	 * @param region region of the map to place the anthill on
+	 * @param origin upper left corner of the 18x18 region of the map
+	 * that the anthill would be placed in
 	 */
-	private static void placeAnthill(Cell[][] cells, E_Terrain anthillType, int region){
+	private static void placeAnthill(Cell[][] cells, E_Terrain anthillType, Position origin){
 		Position[] anthill = {new Position(5, 2), new Position(6, 2), 
 				new Position(7, 2), new Position(7, 2), new Position(8, 2),
 				new Position(9, 2), new Position(10, 2), new Position(11, 2),
@@ -595,12 +626,11 @@ public class World {
 				new Position(9, 14), new Position(10, 14), new Position(11, 14)};
 	
 		// Place the anthill
-		int xShift = (region%8)*18;
-		int yShift = (region/8)*18;
 		for (Position pos : anthill){
-			cells[pos.x+xShift][pos.y+yShift] = 
-					new Cell(anthillType, 0, new Position(pos.x+xShift, pos.y+yShift));
+			cells[pos.x + origin.x][pos.y + origin.y] = 
+					new Cell(anthillType, 0, new Position(pos.x + origin.x, pos.y + origin.y));
 		}
+		
 		
 	}
 	
