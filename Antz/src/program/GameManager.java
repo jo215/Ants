@@ -1,0 +1,132 @@
+package program;
+
+import java.util.HashMap;
+
+import ui.GameplayScreen;
+import ui.TournamentScreen;
+import world.World;
+import ai.StateMachine;
+
+/**
+ * Manages the players, games and world which comprise an Ant tournament.
+ * @author JOH
+ * @version 0.2
+ */
+public class GameManager {
+
+	private boolean debug = true;
+	// The set of uploaded brains - identified by their filename
+	private HashMap<String, StateMachine> playerBrains;
+	private HashMap<String, Integer> playerScores;
+
+	private World world;
+	
+	/**
+	 * Constructor.
+	 */
+	public GameManager() {
+		playerBrains = new HashMap<>();
+		playerScores = new HashMap<>();
+		setWorld(null);
+		if (debug)
+		{
+			System.out.println("debug");
+			setWorld(World.parseWorld("sample0.world"));
+			StateMachine blackBrain = StateMachine.newInstance("crapBrain.txt");
+			StateMachine redBrain = StateMachine.newInstance("exampleBrain.txt");
+			playerBrains.put("crapBrain.txt", blackBrain);
+			playerBrains.put("exampleBrain.txt", redBrain);
+			world.beginGame(redBrain, blackBrain);
+		} else {
+			TournamentScreen ui = new TournamentScreen(this);
+		}
+	}
+	
+	/**
+	 * Works out the correct matching of brains for a tournament to be held.
+	 */
+	public void assignMatches()
+	{
+		
+	}
+	
+	/**
+	 * Adds a new ant brain.
+	 * @param name the name of the brain / player or team
+	 * @param brain the StateMachine containing the brain
+	 * @return true if succeeded, false if a brain with the same name is already loaded.
+	 */
+	public boolean addBrain(String name, StateMachine brain) {
+		if (brain == null)
+			return false;
+		if (playerBrains.containsKey(name))
+			return false;
+		playerBrains.put(name, brain);
+		playerScores.put(name, 0);
+		return true;
+	}
+	
+	/**
+	 * Returns a brain from the list.
+	 * @param name the name of the brain to return
+	 * @return the brain if successful, null otherwise
+	 */
+	public StateMachine getBrain(String name) {
+		if(playerBrains.containsKey(name))
+			return playerBrains.get(name);
+		return null;
+	}
+	
+	/**
+	 * Returns an ant brain's overall score.
+	 * @param name the name of the brain to score
+	 * @return the score if name valid, -1 otherwise
+	 */
+	public int getScore(String name) {
+		if (playerScores.containsKey(name))
+			return playerScores.get(name);
+		return -1;
+	}
+	
+	/**
+	 * Adds some number to a brain's score.
+	 * @param name the name of the brain to affect
+	 * @param scoreToAdd the number to add to current score
+	 * @return true if succeeded, false otherwise
+	 */
+	public boolean addToScore(String name, int scoreToAdd) {
+		if (!playerScores.containsKey(name))
+			return false;
+		playerScores.put(name, playerScores.get(name) + scoreToAdd);
+		return true;
+	}
+	
+	/**
+	 * Returns the total number of brains currently under management.
+	 * @return the number of brains
+	 */
+	public int getTotalPlayers()
+	{
+		return playerBrains.size(); 	
+	}
+
+	/**
+	 * Returns the current world.
+	 * @return
+	 */
+	public World getWorld() {
+		return world;
+	}
+
+	/**
+	 * Sets the current world.
+	 * @param world
+	 * @return
+	 */
+	public boolean setWorld(World world) {
+		if (world == null)
+			return false;
+		this.world = world;
+		return true;
+	}
+}
