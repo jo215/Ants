@@ -57,12 +57,12 @@ public class StateMachine {
 				if (i != -1) {
 					line = line.substring(0, i);
 				}
-				System.out.print("Reading state " + currentState + ": ");
+				//System.out.print("Reading state " + currentState + ": ");
 				//	Split a single line of text into tokens separated by SPACE or TAB
 				String[] tokens = line.toUpperCase().split(" |\t");
 				//	Send these to method to parse and add the state object
 				sm.states.add(sm.createState(tokens));
-				System.out.println("OK");
+				//System.out.println("OK");
 				//	Get next line
 				line = br.readLine();
 				currentState ++;
