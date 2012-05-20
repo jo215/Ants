@@ -8,7 +8,7 @@ package program;
  */
 public class RandGenerator {
 
-	private static long seed = 12345;		//	The sequence of random number seeds
+	private static long seed = 0;		//	The sequence of random number seeds
 	
 	/**
 	 * Constructor.
@@ -23,6 +23,15 @@ public class RandGenerator {
 		{
 			RandGenerator.seed = RandGenerator.seed * 22695477 + 1;
 		}
+	}
+	
+	/**
+	 * Gets the value of the seed.
+	 * @return
+	 */
+	public static long getSeed()
+	{
+		return seed;
 	}
 	
 	/**
