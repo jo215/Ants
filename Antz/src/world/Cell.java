@@ -56,7 +56,7 @@ public class Cell {
 	 */
 	public boolean checkMarker(E_Color color, int marker)
 	{
-		if (marker < 0 || marker > 6)
+		if (marker < 0 || marker > 5)
 			return false;
 		if (color == E_Color.BLACK)
 			return blackMarkers[marker];
@@ -73,7 +73,7 @@ public class Cell {
 	 */
 	public boolean setMarker(E_Color color, int marker) 
 	{
-		if (marker < 0 || marker > 6)
+		if (marker < 0 || marker > 5)
 			return false;
 		if (color == E_Color.BLACK)
 			blackMarkers[marker] = true;
@@ -92,7 +92,7 @@ public class Cell {
 	 */
 	public boolean clearMarker(E_Color color, int marker) 
 	{
-		if (marker < 0 || marker > 6)
+		if (marker < 0 || marker > 5)
 			return false;
 		if (color == E_Color.BLACK)
 			blackMarkers[marker] = false;
