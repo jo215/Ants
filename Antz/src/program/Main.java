@@ -20,8 +20,12 @@ public class Main {
 	public static void main(String[] args)
 	{
 		setNimbusLookAndFeel();
+		//	Remember to set the seed
+		RandGenerator.setSeed(12345);
 		GameManager gm = new GameManager();
 		
+		//for (int i =0; i <100; i++)
+			//System.out.println("" + RandGenerator.randomInt(16384));
 	}
 
 	/**
