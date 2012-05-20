@@ -28,25 +28,25 @@ public class ControlPanel extends JPanel implements ActionListener, ChangeListen
 		super();
 		System.out.println("ControlPanel Constructor");
 		this.world = world;
-//		JPanel temp = new JPanel(new GridLayout(2,1));
-//		add(temp);
-//		JPanel buttons = new JPanel();
-//		//temp.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-//		temp.add(buttons);
-//		System.out.println("buttons panel");//
-//		pauseButton = new JButton("Pause");
-//		pauseButton.addActionListener(this);
-//		buttons.add(pauseButton);
-//		System.out.println("Pause button");//
-//		playButton = new JButton("Play");
-//		playButton.addActionListener(this);
-//		buttons.add(playButton);
-//		System.out.println("Play button");//
-//		currentTurn = new JLabel("Turn: 0");
-//		JPanel turn = new JPanel();
-//		turn.add(currentTurn);
-//		temp.add(turn);
-//		System.out.println("turn");//
+		JPanel temp = new JPanel(new GridLayout(2,1));
+		add(temp);
+		JPanel buttons = new JPanel();
+		//temp.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		temp.add(buttons);
+		System.out.println("buttons panel");//
+		pauseButton = new JButton("Pause");
+		pauseButton.addActionListener(this);
+		buttons.add(pauseButton);
+		System.out.println("Pause button");//
+		playButton = new JButton("Play");
+		playButton.addActionListener(this);
+		buttons.add(playButton);
+		System.out.println("Play button");//
+		currentTurn = new JLabel("Turn: 0");
+		JPanel turn = new JPanel();
+		turn.add(currentTurn);
+		temp.add(turn);
+		System.out.println("turn");//
 		JPanel temp2 = new JPanel();
 		JSlider speedSlider = new JSlider(JSlider.HORIZONTAL, MINSPEED, MAXSPEED, MAXSPEED);
 		speedSlider.addChangeListener(this);
