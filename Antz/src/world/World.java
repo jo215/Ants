@@ -18,6 +18,7 @@ import enums.E_Terrain;
 import ai.StateMachine;
 
 import program.Ant;
+import program.AntLogger;
 import ui.GameplayScreen;
 /**
  * Represents an Ant world.
@@ -35,6 +36,7 @@ public class World {
 	private int sleepAmount = 0;
 	private boolean isPaused;
 	private int turn;
+	private AntLogger logger;
 	
 	/**
 	 * Private constructor.
@@ -46,6 +48,7 @@ public class World {
 				cells[i][j].setWorld(this);
 			}
 		}
+		logger = new AntLogger(this);
 	}
 	
 	/**
@@ -58,6 +61,9 @@ public class World {
 		this.redBrain = redBrain;
 		this.screen = new GameplayScreen(this);
 		setStartingAnts();
+		if (logger != null) {
+			logger.logTurn();
+		}
 		update();
 	}
 	
@@ -68,13 +74,13 @@ public class World {
 		System.out.println("World.setStartingAnts()");
 		for (int i = 0; i < cells.length; i ++) {
 			for (int j = 0 ; j < cells[0].length; j ++) {
-				if (cells[i][j].getTerrain() == E_Terrain.BLACK_ANTHILL) {
+				if (cells[j][i].getTerrain() == E_Terrain.BLACK_ANTHILL) {
 					Ant ant = new Ant(E_Color.BLACK, blackBrain);
-					setAntAt(new Position(i, j), ant);
+					setAntAt(new Position(j, i), ant);
 					ants.add(ant);
-				} else if (cells[i][j].getTerrain() == E_Terrain.RED_ANTHILL) {
+				} else if (cells[j][i].getTerrain() == E_Terrain.RED_ANTHILL) {
 					Ant ant = new Ant(E_Color.RED, redBrain);
-					setAntAt(new Position(i, j), ant);
+					setAntAt(new Position(j, i), ant);
 					ants.add(ant);
 				}
 			}
@@ -85,7 +91,7 @@ public class World {
 	 * Runs a loop of the game.
 	 */
 	private void update() {
-		for (turn = 0; turn < MAXTURNS; turn++) {
+		for (turn = 1; turn <= MAXTURNS; turn++) {
 			while(isPaused) {
 				try {
 					Thread.sleep(100);
@@ -108,6 +114,12 @@ public class World {
 			calcScores();
 			//	Update the display
 			screen.update();
+			//	dump turn info
+			if (logger != null) {
+				//	Choose which turns to log here
+				if (turn < 10)
+				logger.logTurn();
+			}
 			//	Variable speed
 			try {
 				Thread.sleep(sleepAmount);
