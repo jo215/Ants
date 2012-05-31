@@ -51,21 +51,24 @@ public class StateMachine {
 			String line = br.readLine();
 			int currentState = 0;
 			while(line != null) {
-				line.trim();
-				//	Strip out any comments
-				int i = line.indexOf(";");
-				if (i != -1) {
-					line = line.substring(0, i);
+				if (!line.startsWith("#") && !line.equals("")) {
+					line.trim();
+					//	Strip out any comments
+					int i = line.indexOf(";");
+					if (i != -1) {
+						line = line.substring(0, i);
+					}
+					//System.out.print("Reading state " + currentState + ": ");
+					//	Split a single line of text into tokens separated by SPACE or TAB
+					String[] tokens = line.toUpperCase().split(" |\t");
+					//	Send these to method to parse and add the state object
+					sm.states.add(sm.createState(tokens));
+					//System.out.println("OK");
+					currentState ++;
+					//	Get next line
 				}
-				//System.out.print("Reading state " + currentState + ": ");
-				//	Split a single line of text into tokens separated by SPACE or TAB
-				String[] tokens = line.toUpperCase().split(" |\t");
-				//	Send these to method to parse and add the state object
-				sm.states.add(sm.createState(tokens));
-				//System.out.println("OK");
-				//	Get next line
 				line = br.readLine();
-				currentState ++;
+				
 			}
 		} catch (Exception e) {
 			//	Problem reading file - handle elsewhere
