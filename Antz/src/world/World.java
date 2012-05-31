@@ -59,6 +59,7 @@ public class World {
 		ants = new ArrayList<>();
 		this.blackBrain = blackBrain;
 		this.redBrain = redBrain;
+		//swapBrains();
 		this.screen = new GameplayScreen(this);
 		setStartingAnts();
 		if (logger != null) {
@@ -88,7 +89,7 @@ public class World {
 	}
 
 	/**
-	 * Runs a loop of the game.
+	 * Runs the main game loop.
 	 */
 	private void update() {
 		for (turn = 1; turn <= MAXTURNS; turn++) {
@@ -122,13 +123,13 @@ public class World {
 			}
 			//	Variable speed
 			try {
-				Thread.sleep(sleepAmount);
+				Thread.sleep(0);
 			} catch (InterruptedException e) {
 				// Surely not a problem...
 				e.printStackTrace();
 			}
 		}
-		
+		// 	here we need to print a message screen and swap the brains for round 2 (assuming we haven't already done so)
 	}
 	
 	/**
