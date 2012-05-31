@@ -49,7 +49,7 @@ public class MapPanel extends JLabel{
 		System.out.println("MapPanel Constructor");
 		this.screen = screen;
 		this.world = world;
-		zoomLevel = 1;
+		zoomLevel = 4;
 		this.setPreferredSize(new Dimension(world.getWidth() * imageWidth , world.getHeight() * (imageHeight-20)));
 		drawMarkers = false;
 		/**
@@ -158,7 +158,7 @@ public class MapPanel extends JLabel{
 				//	Draw food particles if applicable
 				if (world.foodAt(pos) > 0) {
 					g2d.setColor(Color.YELLOW);
-					g2d.drawString("" + world.foodAt(pos), xPos, yPos);
+					g2d.drawString("" + world.foodAt(pos), xPos + g2d.getFont().getSize(), yPos + g2d.getFont().getSize());
 				}
 				if (drawMarkers == true) {
 				//	Draw markers?
