@@ -47,6 +47,6 @@ public class ScoreRatioPanel extends JPanel {
 		g2d.setColor(Color.RED);
 		g2d.fillRect(0, 0, ratio * 8, this.getHeight());
 		g2d.setColor(Color.BLACK);
-		g2d.fillRect(0, ratio * 8 + 1, this.getWidth(), this.getHeight());
+		g2d.fillRect(ratio * 8 + 1, 0, this.getWidth(), this.getHeight());
 	}
 }
