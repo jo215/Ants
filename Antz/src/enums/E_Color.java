@@ -6,7 +6,6 @@ import java.util.EnumSet;
  * Enumerates allowable Ant colors.
  * @author JOH
  * @version 1
- *
  */
 public enum E_Color {
 

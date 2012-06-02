@@ -2,14 +2,13 @@ package ai;
 
 import program.Ant;
 import world.Cell;
-import world.World;
 import enums.E_Instruction;
 import enums.E_Terrain;
 
 /**
  * Represents a MOVE instruction in the AI state machine.
  * @author JOH
- *
+ * @version 1
  */
 public class State_Move extends State_Abstract {
 

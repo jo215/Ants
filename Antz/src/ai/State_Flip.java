@@ -8,7 +8,7 @@ import enums.E_Instruction;
 /**
  * Represents a FLIP instruction in the AI state machine.
  * @author JOH
- *
+ * @version 1
  */
 public class State_Flip extends State_Abstract {
 
@@ -39,5 +39,4 @@ public class State_Flip extends State_Abstract {
 		else
 			ant.setCurrentState(state2);
 	}
-
 }

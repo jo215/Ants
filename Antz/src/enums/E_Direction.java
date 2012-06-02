@@ -6,7 +6,6 @@ import java.util.EnumSet;
  * Enumerates allowable directions on the map.
  * @author JOH
  * @version 1
- *
  */
 public enum E_Direction {
 	

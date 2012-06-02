@@ -6,14 +6,9 @@ import enums.E_Direction;
 
 /**
  * Represents an individual Ant in the game world.
- * 
- * This is a stub.
- * 
  * @author JOH
- * @version 0.1
+ * @version 1
  */
-
-
 public class Ant {
 
 	private static int nextID = 0;		//	We want to track individual ants...	
@@ -147,10 +142,18 @@ public class Ant {
 		this.isAlive = isAlive;
 	}
 
+	/**
+	 * Returns this ant's state machine.
+	 * @return the state machine
+	 */
 	public StateMachine getStateMachine() {
 		return stateMachine;
 	}
 
+	/**
+	 * Sets this ant's state machine.
+	 * @param stateMachine the state machine to set as this ant's brain
+	 */
 	public void setStateMachine(StateMachine stateMachine) {
 		this.stateMachine = stateMachine;
 	}

@@ -12,7 +12,7 @@ import enums.E_SenseDirection;
  * Represents a single state in an Ant-Brain StateMachine.
  * This class should be extended with a concrete implementation.
  * @author JOH
- * @version 0.2
+ * @version 1
  */
 
 public abstract class State_Abstract {

@@ -5,7 +5,7 @@ import java.util.EnumSet;
 /**
  * Enumerates #condition# for the Sense instruction in the Ant-Brain state machine.
  * @author JOH
- *
+ * @version 1
  */
 public enum E_Condition {
 

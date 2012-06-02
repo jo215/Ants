@@ -5,7 +5,7 @@ import java.util.EnumSet;
 /**
  * Enumerates #left_or_right# for the Turn instruction in the Ant-Brain state machine.
  * @author JOH
- *
+ * @version 1
  */
 public enum E_LeftOrRight {
 

@@ -10,7 +10,7 @@ import enums.E_LeftOrRight;
 /**
  * Represents a TURN instruction in the AI state machine.
  * @author JOH
- *
+ * @version 1
  */
 public class State_Turn extends State_Abstract {
 

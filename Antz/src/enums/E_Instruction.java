@@ -5,7 +5,7 @@ import java.util.EnumSet;
 /**
  * Enumerates the valid instructions for the Ant-Brain state machine.
  * @author JOH
- *
+ * @version 1
  */
 public enum E_Instruction {
 

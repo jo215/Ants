@@ -7,6 +7,9 @@ import world.World;
 
 /**
  * This class provides end-of turn logging facilities for QA.
+ * 
+ * This should be a character-for-character copy of the dump provided with the customer spec,
+ * assuming playing on the tiny world with the sample brain (as given in the customer spec).
  * @author JOH
  * @version 1
  */
@@ -38,6 +41,11 @@ public class AntLogger {
 		}
 	}
 
+	/**
+	 * Returns formatted info about the ant in a cell.
+	 * @param cell the cell to report on
+	 * @return the formatted string
+	 */
 	private String antInfo(Cell cell) {
 		String info = "";
 		if (cell.isAnt()) {
@@ -56,6 +64,12 @@ public class AntLogger {
 		return info;
 	}
 
+	/**
+	 * Returns formatted information about markers in a cell.
+	 * @param cell the cell to check
+	 * @param color the color to check for
+	 * @return the formatted string
+	 */
 	private String markerInfo(Cell cell, E_Color color) {
 		String info = "";
 		String colorName;
@@ -76,12 +90,22 @@ public class AntLogger {
 		return info;
 	}
 
+	/**
+	 * Returns a formatted string giving the amount of food in a cell.
+	 * @param cell the cell to report on
+	 * @return the formatted string
+	 */
 	private String food(Cell cell) {
 		if (cell.getFoodAmount() > 0)
 			return cell.getFoodAmount() + " food; ";
 		return "";
 	}
 
+	/**
+	 * Returns a formatted string giving the terrain present in a cell.
+	 * @param cell the cell to report on
+	 * @return the formatted string
+	 */
 	private String terrain(Cell cell) {
 		switch (cell.getTerrain())
 		{

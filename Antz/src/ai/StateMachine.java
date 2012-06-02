@@ -15,7 +15,6 @@ import enums.E_Instruction;
  * Represents the StateMachine for Ant Brains.
  * @author JOH
  * @version 1
- *
  */
 public class StateMachine {
 
@@ -45,30 +44,28 @@ public class StateMachine {
 	public static StateMachine newInstance(String fileName) {
 		StateMachine sm = new StateMachine();
 		sm.setName(fileName);
+		@SuppressWarnings("unused")
+		int currentState = 0;
 		//	Open the file stream
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)))) {
 			//	Read each line of the file
 			String line = br.readLine();
-			int currentState = 0;
 			while(line != null) {
 				if (!line.startsWith("#") && !line.equals("")) {
 					line.trim();
-					//	Strip out any comments
+					//	Strip out any end-of-line comments
 					int i = line.indexOf(";");
 					if (i != -1) {
 						line = line.substring(0, i);
 					}
-					//System.out.print("Reading state " + currentState + ": ");
 					//	Split a single line of text into tokens separated by SPACE or TAB
 					String[] tokens = line.toUpperCase().split(" |\t");
 					//	Send these to method to parse and add the state object
 					sm.states.add(sm.createState(tokens));
-					//System.out.println("OK");
 					currentState ++;
 					//	Get next line
 				}
 				line = br.readLine();
-				
 			}
 		} catch (Exception e) {
 			//	Problem reading file - handle elsewhere

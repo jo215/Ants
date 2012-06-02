@@ -12,7 +12,7 @@ import enums.E_SenseDirection;
 /**
  * Represents a SENSE instruction in the AI state machine. 
  * @author JOH
- * @version 0.1
+ * @version 1
  */
 public class State_Sense extends State_Abstract {
 	
@@ -34,7 +34,7 @@ public class State_Sense extends State_Abstract {
 			state2 = tokenToState(tokens[3]);
 			condition = tokenToCondition(tokens[4]);
 			if (tokens.length == 6) {
-				//	Marker numbers - have added these to condition enums which seems to mark sense
+				//	Marker numbers - have added these to condition enums which seems to make sense
 				switch (tokens[5])
 				{
 				case "0": condition = E_Condition.MARKER0; break;

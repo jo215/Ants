@@ -3,13 +3,10 @@ package ui;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
-
 import program.Ant;
-
 import world.Position;
 import world.World;
 import enums.E_Color;
-import enums.E_Terrain;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -19,11 +16,11 @@ import java.io.IOException;
 /**
  * Represents the map panel within the GameplayScreen.
  * @author JOH
- * @version 0.1
+ * @version 1
  */
+@SuppressWarnings("serial")
 public class MapPanel extends JLabel{
 	
-	private GameplayScreen screen;
 	private World world;
 	private int zoomLevel;
 	private boolean drawMarkers;
@@ -40,17 +37,27 @@ public class MapPanel extends JLabel{
 	public static final Font smallFont = new Font("Tahoma", Font.PLAIN, 20);
 	public static final Font tinyFont = new Font("Tahoma", Font.PLAIN, 10);
 
+	//for markers
+	private Position[] markerOffsets = {new Position(0, 10), new Position(10, 5),
+			new Position(10, -5), new Position(0, -10), new Position(-10, -5),
+			new Position(-10, 5)}; 
+	private Color[] blackMarkerColors = {new Color(0.0f, 0.0f,1.0f), new Color(0.1f, 0.2f,1.0f),
+			new Color(0.2f, 0.4f,1.0f), new Color(0.3f, 0.6f,1.0f), 
+			new Color(0.4f, 0.8f,1.0f), new Color(0.5f, 1.0f,1.0f)};
+	private Color[] redMarkerColors = {new Color(1.0f, 0.0f, 0.0f), new Color(1.0f, 0.2f, 0.1f),
+			new Color(1.0f, 0.4f,0.2f), new Color(1.0f, 0.6f,0.3f), 
+			new Color(1.0f, 0.8f,0.4f), new Color(1.0f, 1.0f,0.5f)};
+	
+	
 	/**
 	 * Constructor
 	 */
 	public MapPanel(GameplayScreen screen, World world)
 	{
 		super();
-		System.out.println("MapPanel Constructor");
-		this.screen = screen;
 		this.world = world;
 		zoomLevel = 4;
-		this.setPreferredSize(new Dimension(world.getWidth() * imageWidth , world.getHeight() * (imageHeight-20)));
+		this.setPreferredSize(new Dimension(world.getWidth() * 18 , world.getHeight() *21));
 		drawMarkers = false;
 		/**
 		 * Drag map functionality
@@ -58,6 +65,7 @@ public class MapPanel extends JLabel{
 		MapDragListener dragListener = new MapDragListener();
 		addMouseMotionListener(dragListener);
 		addMouseListener(dragListener);
+		
 		bigAnts = new BufferedImage[2][6];
 		smallAnts = new BufferedImage[2][6];
 		tinyAnts = new BufferedImage[2][6];
@@ -90,14 +98,14 @@ public class MapPanel extends JLabel{
 	/**
 	 * Draws the map.
 	 */
-	public void paintComponent(Graphics g)
-	{
+	public void paintComponent(Graphics g){
+		
 		//	Cast as G2D
 		Graphics2D g2d = (Graphics2D) g;
 		
 		//	clear screen
 		g2d.setColor(Color.BLACK);
-		g2d.fillRect(0, 0, this.getWidth(), this.getHeight());	
+		g2d.fillRect(0, 0, getWidth(), getHeight());	
 		//	Choose image sizes based on zoom level
 		BufferedImage rocky = null, clear = null, anthill = null;
 		BufferedImage[][] ants = null;
@@ -143,7 +151,7 @@ public class MapPanel extends JLabel{
 				switch (world.getCellAt(pos).getTerrain())
 				{
 					case ROCKY:
-						g2d.drawImage(rocky, xPos, yPos , null);
+						g2d.drawImage(rocky, xPos, yPos, null);
 						break;
 					case CLEAR:
 						g2d.drawImage(clear, xPos, yPos , null);
@@ -158,28 +166,34 @@ public class MapPanel extends JLabel{
 				//	Draw food particles if applicable
 				if (world.foodAt(pos) > 0) {
 					g2d.setColor(Color.YELLOW);
-					g2d.drawString("" + world.foodAt(pos), xPos + g2d.getFont().getSize(), yPos + g2d.getFont().getSize());
+					g2d.drawString("" + world.foodAt(pos), xPos + g2d.getFont().getSize() * .7f, yPos + g2d.getFont().getSize() * 1.2f);
 				}
-				if (drawMarkers == true) {
-				//	Draw markers?
-					if (world.getCellAt(pos).checkAnyMarker(E_Color.BLACK)) {
-						g2d.setColor(Color.BLACK);
+				if (drawMarkers) {
+					//Draw black markers
+					if (world.getCellAt(pos).checkAnyMarker(E_Color.BLACK)) {		
 						for (int i = 0; i < 6; i++) {
+							g2d.setColor(blackMarkerColors[i]);
 							if (world.getCellAt(pos).checkMarker(E_Color.BLACK, i)) {
-								g2d.drawString("" + i, xPos, yPos);
+								g2d.drawString(".", 
+										xPos + (markerOffsets[i].x + 40)/zoomLevel, 
+										yPos + (markerOffsets[i].y + 55)/zoomLevel);
 							}
 						}
 					}
 				
+					//Draw red markers
 					if (world.getCellAt(pos).checkAnyMarker(E_Color.RED)) {
-						g2d.setColor(Color.RED);
 						for (int i = 0; i < 6; i++) {
+							g2d.setColor(redMarkerColors[i]);
 							if (world.getCellAt(pos).checkMarker(E_Color.RED, i)) {
-								g2d.drawString("" + i, xPos, yPos);
+								g2d.drawString(".", 
+										xPos + (markerOffsets[i].x + 20)/zoomLevel, 
+										yPos + (markerOffsets[i].y + 35)/zoomLevel);
 							}
 						}
 					}
-				}
+				}//end of drawing markers
+				
 				//	Draw any ants
 				if (world.antAt(pos) != null) {
 					Ant ant = world.antAt(pos);
@@ -190,6 +204,7 @@ public class MapPanel extends JLabel{
 	}
 
 	/**
+	 * Returns the current zoom level.
 	 * @return the zoomLevel
 	 */
 	public int getZoomLevel() {
@@ -197,6 +212,7 @@ public class MapPanel extends JLabel{
 	}
 
 	/**
+	 * Sets the current zoom level.
 	 * @param zoomLevel the zoomLevel to set
 	 */
 	public void setZoomLevel(int zoomLevel) {
@@ -241,5 +257,24 @@ public class MapPanel extends JLabel{
 			setCursor(Cursor.getPredefinedCursor(
 			Cursor.DEFAULT_CURSOR));
 		}     
+	}
+
+	/**
+	 * Turns on/off drawing of markers
+	 */
+	public void toggleMarkers() {
+		if(drawMarkers){
+			drawMarkers = false;
+		} else {
+			drawMarkers = true;
+		}
+	}
+
+	/**
+	 * Checks the state of class boolean drawMarkers
+	 * @return true if markers are being drawn
+	 */
+	public boolean doDrawMarkers() {
+		return drawMarkers;
 	};
 }

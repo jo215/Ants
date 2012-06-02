@@ -8,8 +8,7 @@ import enums.E_Terrain;
 /**
  * Represents an individual map cell in an Ant world.
  * @author JOH
- * @version 0.2
- *
+ * @version 1
  */
 public class Cell {
 	
@@ -35,8 +34,20 @@ public class Cell {
 	}
 	
 	/**
+	 * overloaded constructor; allows to set world
+	 * @param terrain the terrain at this location
+	 * @param foodAmount the amount of food at this location
+	 * @param position
+	 * @param world
+	 */
+	public Cell(E_Terrain terrain, int foodAmount, Position position, World world) {
+		this(terrain, foodAmount, position);
+		this.world = world;
+	}
+	
+	/**
 	 * Checks if any marker of a given color is present at this cell.
-	 * @return
+	 * @return true if present, false otherwise.
 	 */
 	public boolean checkAnyMarker(E_Color color)
 	{
@@ -101,6 +112,15 @@ public class Cell {
 		else
 			return false;
 		return true;
+	}
+	
+	
+	/**
+	 * Resets all markers present in this cell
+	 */
+	public void resetAllMarkers(){
+		redMarkers = new boolean[6];
+		blackMarkers = new boolean[6];	
 	}
 	
 	/**
@@ -190,6 +210,15 @@ public class Cell {
 	 */
 	public void setWorld(World world) {
 		this.world = world;
+	}
+
+	/**
+	 * Returns a new cell that is the same as given cell
+	 * @param cell cell to copy
+	 * @return new cell with the same parameters
+	 */
+	public static Cell copy(Cell cell) {
+		return new Cell(cell.getTerrain(), cell.getFoodAmount(), cell.getPosition(), cell.getWorld());
 	}
 	
 }

@@ -7,7 +7,7 @@ import enums.E_Instruction;
 /**
  * Represents a PICKUP instruction in the AI state machine.
  * @author JOH
- *
+ * @version 1
  */
 public class State_Pickup extends State_Abstract {
 	

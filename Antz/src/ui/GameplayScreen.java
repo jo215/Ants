@@ -3,24 +3,27 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-
-import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.border.EtchedBorder;
-
-import program.GameManager;
 import world.World;
 
-
+/**
+ * This class draws the main game screen UI.
+ * @author JOH
+ * @version 1
+ */
+@SuppressWarnings("serial")
 public class GameplayScreen extends JFrame {
-
 
 	private MapPanel mapPanel;
 	private ScorePanel scorePanel;
@@ -35,7 +38,6 @@ public class GameplayScreen extends JFrame {
 	public GameplayScreen(final World world)
 	{
 		super("Antz");
-		System.out.println("GameplayScreen Constructor");
 		this.world = world;
 	    Container pane = this.getContentPane();
 	    JPanel outerPanel = new JPanel(new BorderLayout());
@@ -45,30 +47,48 @@ public class GameplayScreen extends JFrame {
 	    
 	    //	Add the central main map panel, within a JScrollPane
 		mapPanel = new MapPanel(this, world);
-		JScrollPane scrollPane = new JScrollPane(mapPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		JScrollPane scrollPane = new JScrollPane(mapPanel, 
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, 
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setWheelScrollingEnabled(false);
 		scrollPane.setDoubleBuffered(true);
 		scrollPane.addMouseWheelListener(new MapScrollListener(scrollPane));
 		mainPanel.add("Center", scrollPane);
-		//	Add the scoring information to NORTH
+		
+		//	Add the scoring information
 		scorePanel = new ScorePanel(world);
 	    mainPanel.add("North", scorePanel);
-	    //	Add the controls to SOUTH
+
+	    // make control panel
+	    JPanel controls = new JPanel(new GridLayout(1,2));    
 	    controlPanel = new ControlPanel(world);
-	    mainPanel.add("South", controlPanel);
+	    controls.add(controlPanel);
+	    
+	    // make marker check box
+	    JCheckBox markersCheckbox = new JCheckBox("Show markers");
+	    markersCheckbox.setSelected(mapPanel.doDrawMarkers());
+	    markersCheckbox.addItemListener(new ItemListener(){
+	    	 public void itemStateChanged(ItemEvent e) {
+	             mapPanel.toggleMarkers();
+	         }
+	    });
+	    controls.add(markersCheckbox);
+	    
+	    mainPanel.add("South", controls);
 	    mainPanel.add("East", new JPanel());
 	    mainPanel.add("West", new JPanel());
 	    
 	    //  final initialization
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	    this.setExtendedState(this.getExtendedState()|JFrame.MAXIMIZED_BOTH);
 	    this.setResizable(true);
 	    this.pack();
-	    this.setVisible(true);  
+	    this.setLocationRelativeTo(null);
+	    this.setVisible(true); 
+	    this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
 	/**
-	 * Called when we need to update the world display.
+	 * Called when we need to update the world display. Updates all sub components.
 	 */
 	public void update()
 	{
@@ -77,7 +97,7 @@ public class GameplayScreen extends JFrame {
 		scorePanel.blackScore.setText("Score: " + world.getBlackScore());
 		scorePanel.scoreRatio.repaint();
 		controlPanel.getCurrentTurn().setText("Turn: " + world.getTurn());
-	}
+	}	
 	
 	/**
 	 * Scroll Pane listener (for mouse wheel zoom);

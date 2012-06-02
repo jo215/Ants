@@ -9,27 +9,28 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-
+import javax.swing.SwingUtilities;
 import enums.E_Color;
 import enums.E_Condition;
 import enums.E_Direction;
 import enums.E_Terrain;
-
 import ai.StateMachine;
-
 import program.Ant;
 import program.AntLogger;
 import ui.GameplayScreen;
+
 /**
  * Represents an Ant world.
  * @author JOH
- * @version 0.2
+ * @version 1
  */
 public class World {
 	
 	private Cell[][] cells;							//	The grid of cells which comprise this world
+	private Cell[][] unchangedCells;
 	private ArrayList<Ant> ants;					//	The ants in the world
 	private StateMachine redBrain, blackBrain;		//	The two opposing player brains
+	private String redName, blackName;				//  Team names
 	private int redScore, blackScore;				//	Running total of scores
 	private GameplayScreen screen;
 	private static final int MAXTURNS = 300000;
@@ -48,33 +49,58 @@ public class World {
 				cells[i][j].setWorld(this);
 			}
 		}
+		this.unchangedCells = deepCopyCells(this.cells);	
 		logger = new AntLogger(this);
 	}
 	
+		
 	/**
 	 * Starts a new game
 	 */
-	public void beginGame(StateMachine redBrain, StateMachine blackBrain) {
-		System.out.println("world.beginGame()");
+	public void beginGame() {
+
 		ants = new ArrayList<>();
-		this.blackBrain = blackBrain;
-		this.redBrain = redBrain;
-		//swapBrains();
-		this.screen = new GameplayScreen(this);
-		setStartingAnts();
-		if (logger != null) {
-			logger.logTurn();
+		
+		//reset scores for a new game:
+		redScore = 0;
+		blackScore = 0;
+				
+		//reset the map (markers, food, ants):
+		cells = deepCopyCells(unchangedCells);
+		
+		if(redBrain != null && redName != null && blackBrain != null && blackName != null){
+			//create GUI from EDT:
+			Runnable createGameplayScreen= new Runnable() {
+				public void run() {
+					screen = new GameplayScreen(World.this);
+				}
+			};
+			try {
+				SwingUtilities.invokeAndWait(createGameplayScreen);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
+	
+		
+			//set up
+			setStartingAnts();
+
+			if (logger != null) {
+				logger.logTurn();
+			}
+				
+			//run game loop
+			update(); 
+
 		}
-		update();
 	}
 	
 	/**
 	 * Sets up the initial ants in the world.
 	 */
 	private void setStartingAnts() {
-		System.out.println("World.setStartingAnts()");
-		for (int i = 0; i < cells.length; i ++) {
-			for (int j = 0 ; j < cells[0].length; j ++) {
+		for (int i = 0; i < cells[0].length; i ++) {
+			for (int j = 0 ; j < cells.length; j ++) {
 				if (cells[j][i].getTerrain() == E_Terrain.BLACK_ANTHILL) {
 					Ant ant = new Ant(E_Color.BLACK, blackBrain);
 					setAntAt(new Position(j, i), ant);
@@ -85,51 +111,66 @@ public class World {
 					ants.add(ant);
 				}
 			}
-		}		
+		}
 	}
 
 	/**
-	 * Runs the main game loop.
+	 * Runs a loop of the game.
 	 */
 	private void update() {
+
 		for (turn = 1; turn <= MAXTURNS; turn++) {
+												
 			while(isPaused) {
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+			
 			for (Ant ant : ants) {
 				if (ant.isAlive()) {
 					if (ant.getResting() > 0) {
 						ant.setResting(ant.getResting() - 1);
 					} else {
-						Position p = this.findAnt(ant.getId());
+						Position p = findAnt(ant.getId());
 						Cell cell = cells[p.x][p.y];
 						ant.getStateMachine().step(ant, cell);
 					}
 				}
 			}
 			calcScores();
-			//	Update the display
-			screen.update();
+			
+			//update GUI in EDT
+			Runnable updateDisplay = new Runnable() {
+				public void run() { screen.update(); }
+			};
+			SwingUtilities.invokeLater(updateDisplay);
+			//screen.update();					
+						
 			//	dump turn info
 			if (logger != null) {
 				//	Choose which turns to log here
-				if (turn < 10)
-				logger.logTurn();
+				if (turn < 10000)
+					logger.logTurn();
 			}
+
 			//	Variable speed
 			try {
-				Thread.sleep(0);
+				Thread.sleep(sleepAmount);
 			} catch (InterruptedException e) {
 				// Surely not a problem...
 				e.printStackTrace();
-			}
+			}	
 		}
-		// 	here we need to print a message screen and swap the brains for round 2 (assuming we haven't already done so)
+	}
+	
+	/**
+	 * Close the gameplay screen.
+	 */
+	public void closeScreen(){
+		screen.dispose();
 	}
 	
 	/**
@@ -153,7 +194,7 @@ public class World {
 	 * Returns a specific cell.
 	 * @param x the x coordinate
 	 * @param y the y coordinate
-	 * @return
+	 * @return the cell
 	 */
 	public Cell getCellAt(Position pos) {
 		return cells[pos.x][pos.y];
@@ -161,7 +202,7 @@ public class World {
 	
 	/**
 	 * Returns the width of the world.
-	 * @return
+	 * @return the width
 	 */
 	public int getWidth() {
 		return cells.length;
@@ -169,7 +210,7 @@ public class World {
 	
 	/**
 	 * Returns the height of the world.
-	 * @return
+	 * @return the height
 	 */
 	public int getHeight() {
 		return cells[0].length;
@@ -216,7 +257,7 @@ public class World {
 	
 	/**
 	 * Returns true if the given ant (by id) is alive.
-	 * @param id
+	 * @param id the ant's id
 	 * @return true if alive, false otherwise
 	 */
 	public boolean antIsAlive(int id) {
@@ -378,7 +419,7 @@ public class World {
 		int y = 150;
 		Cell[][] cells = new Cell[x][y];
 		
-		// Make a rocky boarder, other cells clear
+		// Make a rocky border, other cells clear
 		for (int i = 0; i < y; i++){
 			for (int j = 0; j < x; j++){
 				if ((i == 0) || (i == y-1) || (j == 0) || (j == x-1)){
@@ -815,6 +856,21 @@ public class World {
 	}
 	
 	/**
+	 * Copies a 2d array of cells 
+	 * @param original original array
+	 * @return copy of the original array
+	 */
+	private static Cell[][] deepCopyCells(Cell[][] original){
+		Cell[][] copy = new Cell[original.length][original[0].length];
+		for (int i = 0; i < original.length; i ++) {
+			for (int j = 0; j < original[0].length; j ++) {
+				copy[i][j] = Cell.copy(original[i][j]);
+			}
+		}
+		return copy;
+	}
+	
+	/**
 	 * Parses a world file to World object.
 	 * @param absolutePath the path to the World file
 	 * @return the World object or null if a problem was encountered
@@ -830,13 +886,14 @@ public class World {
 			int y = Integer.parseInt(line);
 			//	Setup grid of map cells - note x, y not row, column - is this OK?
 			Cell[][] cells = new Cell[x][y];
+	
 			//	Now read y lines of length x
 			for (int i = 0; i < y; i++) {
 				line = br.readLine();
 				line = line.replace(" ", "");
 				if (line.length() != x)
 					throw new IllegalArgumentException();
-					
+				
 				for (int j = 0; j < x; j ++) {
 					switch (line.charAt(j)){
 						case '.':			//	Clear cell
@@ -857,12 +914,42 @@ public class World {
 					}
 				}
 			}
+			
+			
+			// check if borders are rocky
+			for (int i = 0; i < y; i++){
+				for (int j = 0; j < x; j++){
+					if ((i == 0) || (i == y-1) || (j == 0) || (j == x-1)){
+						if (cells[j][i].getTerrain() != E_Terrain.ROCKY){
+							throw new IllegalArgumentException();
+						}
+					} 
+				}
+			}//end of rocky borders check
+			
+			
 			return new World(cells);
+			
 		} catch (Exception e) {
-			System.out.println("Error parsing world file.");
-			e.printStackTrace();
+			//	This error caught dealt with later.
 			return null;
 		}
+	}
+	
+	/**
+	 * Returns red team's name
+	 * @return redName
+	 */
+	public String getRedName(){
+		return redName;
+	}
+	
+	/**
+	 * Returns black team's name
+	 * @return blackName
+	 */
+	public String getBlackName(){
+		return blackName;
 	}
 	
 	/**
@@ -870,8 +957,11 @@ public class World {
 	 */
 	public void swapBrains() {
 		StateMachine swap = redBrain;
+		String swapString = redName;
 		redBrain = blackBrain;
 		blackBrain = swap;
+		redName = blackName;
+		blackName = swapString;
 	}
 
 	/**
@@ -884,15 +974,17 @@ public class World {
 
 	/**
 	 * Sets the red player's brain.
+	 * @param redName name of the red team
 	 * @param redBrain
 	 */
-	public void setRedBrain(StateMachine redBrain) {
+	public void setRedBrain(String redName, StateMachine redBrain) {
+		this.redName = redName;
 		this.redBrain = redBrain;
 	}
+	
 
 	/**
 	 * Returns the black player's brain.
-	 * @return
 	 */
 	public StateMachine getBlackBrain() {
 		return blackBrain;
@@ -901,53 +993,81 @@ public class World {
 	/**
 	 * Sets the black player's brain.
 	 * @param blackBrain
+	 * @param blackName name of the black team
 	 */
-	public void setBlackBrain(StateMachine blackBrain) {
+	public void setBlackBrain(String blackName, StateMachine blackBrain) {
 		this.blackBrain = blackBrain;
+		this.blackName = blackName;
 	}
 
-
-	public GameplayScreen getScreen() {
-		return screen;
-	}
-
-
-	public void setScreen(GameplayScreen screen) {
-		this.screen = screen;
-	}
-
+	/**
+	 * Returns the red score.
+	 * @return the score
+	 */
 	public int getRedScore() {
 		return redScore;
 	}
 
+	/**
+	 * Sets the red score.
+	 * @param redScore
+	 */
 	public void setRedScore(int redScore) {
 		this.redScore = redScore;
 	}
 
+	/**
+	 * Gets the black score.
+	 * @return the score
+	 */
 	public int getBlackScore() {
 		return blackScore;
 	}
 
+	/**
+	 * Sets the black score.
+	 * @param blackScore
+	 */
 	public void setBlackScore(int blackScore) {
 		this.blackScore = blackScore;
 	}
 
+	/**
+	 * Checks if game paused.
+	 * @return true if paused
+	 */
 	public boolean isPaused() {
 		return isPaused;
 	}
 
+	/**
+	 * Sets the game's pause status.
+	 * @param isPaused
+	 */
 	public void setPaused(boolean isPaused) {
 		this.isPaused = isPaused;
 	}
 
+	/**
+	 * Gets the amount the game sleeps for between each turn.
+	 * @return the amount
+	 */
 	public int getSleepAmount() {
 		return sleepAmount;
 	}
 
+	/**
+	 * Sets the amount the game sleeps for between turns.
+	 * @param sleepAmount
+	 */
 	public void setSleepAmount(int sleepAmount) {
 		this.sleepAmount = sleepAmount;
 	}
 
+	/**
+	 * Gets the current turn.
+	 * @return the turn
+	 */
 	public int getTurn() {
 		return turn;
 	}

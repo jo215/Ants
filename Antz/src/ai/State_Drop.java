@@ -7,7 +7,7 @@ import enums.E_Instruction;
 /**
  * Represents a DROP instruction in the AI state machine.
  * @author JOH
- *
+ * @version 1
  */
 public class State_Drop extends State_Abstract {
 
@@ -36,5 +36,4 @@ public class State_Drop extends State_Abstract {
 		//	Goto state1
 		ant.setCurrentState(state1);
 	}
-
 }

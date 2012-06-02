@@ -3,19 +3,20 @@ package ui;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
 import world.World;
 
+/**
+ * THis class contains all the game screen controls.
+ * @author JOH
+ * @version 1
+ */
+@SuppressWarnings("serial")
 public class ControlPanel extends JPanel implements ActionListener, ChangeListener{
 
 	private World world;
@@ -24,29 +25,29 @@ public class ControlPanel extends JPanel implements ActionListener, ChangeListen
 	static final int MINSPEED = 0;
 	static final int MAXSPEED = 10;
 	
+	/**
+	 * Constructor.
+	 * @param world the world we link to 
+	 */
 	public ControlPanel(World world) {
 		super();
-		System.out.println("ControlPanel Constructor");
 		this.world = world;
 		JPanel temp = new JPanel(new GridLayout(2,1));
 		add(temp);
 		JPanel buttons = new JPanel();
 		//temp.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		temp.add(buttons);
-		System.out.println("buttons panel");//
 		pauseButton = new JButton("Pause");
 		pauseButton.addActionListener(this);
 		buttons.add(pauseButton);
-		System.out.println("Pause button");//
 		playButton = new JButton("Play");
 		playButton.addActionListener(this);
 		buttons.add(playButton);
-		System.out.println("Play button");//
 		currentTurn = new JLabel("Turn: 0");
 		JPanel turn = new JPanel();
 		turn.add(currentTurn);
 		temp.add(turn);
-		System.out.println("turn");//
+
 		JPanel temp2 = new JPanel();
 		JSlider speedSlider = new JSlider(JSlider.HORIZONTAL, MINSPEED, MAXSPEED, MAXSPEED);
 		speedSlider.addChangeListener(this);
@@ -82,10 +83,18 @@ public class ControlPanel extends JPanel implements ActionListener, ChangeListen
 			world.setSleepAmount((MAXSPEED - slider.getValue()) * 10);
 	}
 
+	/**
+	 * Gets the current turn.
+	 * @return
+	 */
 	public JLabel getCurrentTurn() {
 		return currentTurn;
 	}
 
+	/**
+	 * Sets the current turn.
+	 * @param currentTurn
+	 */
 	public void setCurrentTurn(JLabel currentTurn) {
 		this.currentTurn = currentTurn;
 	}

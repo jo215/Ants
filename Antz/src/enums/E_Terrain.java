@@ -3,7 +3,7 @@ package enums;
 /**
  * Enumerates terrain types allowable within map cells.
  * @author JOH
- * @version 0.1
+ * @version 1
  */
 public enum E_Terrain {
 

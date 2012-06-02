@@ -5,7 +5,7 @@ import java.util.EnumSet;
 /**
  * Enumerates #sense_dir# for the Sense instruction of the Ant-Brain state machine.
  * @author JOH
- *
+ * @version 1
  */
 public enum E_SenseDirection {
 
