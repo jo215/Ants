@@ -44,6 +44,9 @@ public class State_Move extends State_Abstract {
 			cell.setAnt(null);
 			forward.setAnt(ant);
 			ant.setCurrentState(state1);
+			//	must rest for 14 turns
+			ant.setResting(14);
+			cell.getWorld().checkForSurroundedAnts(forward.getPosition());
 		}
 	}
 }
