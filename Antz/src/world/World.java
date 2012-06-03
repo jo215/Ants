@@ -50,7 +50,7 @@ public class World {
 			}
 		}
 		this.unchangedCells = deepCopyCells(this.cells);	
-		logger = new AntLogger(this);
+		//logger = new AntLogger(this);
 	}
 	
 		
@@ -189,6 +189,53 @@ public class World {
 			}
 		}
 	}
+	
+	/**
+	 * Checks if ant is surrounded and must therefore be killed.
+	 * @param p the position to check
+	 */
+	public void checkForSurroundedAnts(Position p)
+	{
+		checkForSurroundedAntAt(p);
+		for (int d = 0; d < 6; d++) {
+			checkForSurroundedAntAt(adjacentCell(p, E_Direction.values()[d]).getPosition());
+		}
+	}
+
+	/**
+	 * Checks an individual hex for a surrounded ant.
+	 * @param p the position to check
+	 */
+	private void checkForSurroundedAntAt(Position p) {
+		if (someAntIsAt(p)) {
+			Ant a = antAt(p);
+			if (adjacentAnts(p, a.getColor().otherColor()) >= 5) {
+				killAntAt(p);
+				setFoodAt(p, foodAt(p) + 3);
+				if (a.hasFood()) {
+					setFoodAt(p, foodAt(p) + 1);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Returns the number of adjacent ants to a given position
+	 * @param p the position to check
+	 * @param otherColor the enemy color
+	 * @return
+	 */
+	private int adjacentAnts(Position p, E_Color otherColor) {
+		int n = 0;
+		for (int d = 0; d < 6 ; d++) {
+			if (someAntIsAt(adjacentCell(p, E_Direction.values()[d]).getPosition()) && antAt(adjacentCell(p, E_Direction.values()[d]).getPosition()).getColor() == otherColor)
+			{
+				n++;
+			}
+		}
+		return n;
+	}
+
 
 	/**
 	 * Returns a specific cell.
