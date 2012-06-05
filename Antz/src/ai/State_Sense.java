@@ -35,14 +35,14 @@ public class State_Sense extends State_Abstract {
 			condition = tokenToCondition(tokens[4]);
 			if (tokens.length == 6) {
 				//	Marker numbers - have added these to condition enums which seems to make sense
-				switch (tokens[5])
+				switch (Integer.parseInt(tokens[5]))
 				{
-				case "0": condition = E_Condition.MARKER0; break;
-				case "1": condition = E_Condition.MARKER1; break;
-				case "2": condition = E_Condition.MARKER2; break;
-				case "3": condition = E_Condition.MARKER3; break;
-				case "4": condition = E_Condition.MARKER4; break;
-				case "5": condition = E_Condition.MARKER5; break;
+				case 0: condition = E_Condition.MARKER0; break;
+				case 1 : condition = E_Condition.MARKER1; break;
+				case 2 : condition = E_Condition.MARKER2; break;
+				case 3 : condition = E_Condition.MARKER3; break;
+				case 4 : condition = E_Condition.MARKER4; break;
+				case 5 : condition = E_Condition.MARKER5; break;
 				default: Main.error("Unknown marker number: " + tokens[5]);
 				}
 			}
