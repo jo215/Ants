@@ -16,7 +16,7 @@ import ai.StateMachine;
  */
 public class GameManager {
 
-	private boolean debug = true;
+	private boolean debug = false;
 	
 	// The set of uploaded brains - identified by their filename
 	private HashMap<String, StateMachine> playerBrains;
@@ -32,8 +32,8 @@ public class GameManager {
 	 * Constructor.
 	 */
 	public GameManager() {
-		playerBrains = new HashMap<>();
-		playerScores = new HashMap<>();
+		playerBrains = new HashMap<String, StateMachine>();
+		playerScores = new HashMap<String, Integer>();
 		roundN = 0;
 		setWorld(null);
 		if (!debug)
@@ -64,9 +64,9 @@ public class GameManager {
 			//in the form of ["String1", "String2"],
 			//get them wrapped in arrays
 			if(pairs.get(0).getClass() == "".getClass()){
-				ArrayList<Object> arrayedPair = new ArrayList<>();
+				ArrayList<Object> arrayedPair = new ArrayList<Object>();
 				for (int i=0; i<2; i++){
-					ArrayList<Object >singularPair = new ArrayList<>();
+					ArrayList<Object >singularPair = new ArrayList<Object>();
 					singularPair.add(pairs.get(i));
 					arrayedPair.add(singularPair);
 				}
@@ -74,17 +74,17 @@ public class GameManager {
 			}
 			return pairs;
 		} else {
-			ArrayList<Object> newPairs = new ArrayList<>(); //less pairs
+			ArrayList<Object> newPairs = new ArrayList<Object>(); //less pairs
 			//while at least 2 elements
 			while(pairs.size()>1){
-				ArrayList<Object >pair = new ArrayList<>();
+				ArrayList<Object >pair = new ArrayList<Object>();
 				//pick two elements at random to form a new pair, 
 				//remove them from the list of available elements
 				for (int i = 0; i<2; i++){
 					Object pick = pairs.remove((int)(Math.random()*pairs.size()));
 					//if a string, enclose in ArrayList:
 					if(pick.getClass() == "".getClass()){
-						ArrayList<Object >singularPair = new ArrayList<>();
+						ArrayList<Object >singularPair = new ArrayList<Object>();
 						singularPair.add(pick);
 						pair.add(singularPair);
 					//else add as is:	
@@ -101,7 +101,7 @@ public class GameManager {
 				Object lastOne = pairs.get(0);
 				//if a string, enclose in ArrayList
 				if(lastOne.getClass() == "".getClass()){
-					ArrayList<Object >singularPair = new ArrayList<>();
+					ArrayList<Object >singularPair = new ArrayList<Object>();
 					singularPair.add(lastOne);
 					newPairs.add(singularPair);
 				//else add as is:
@@ -118,7 +118,7 @@ public class GameManager {
 	 * Works out the correct matching of brains for a tournament to be held.
 	 */
 	public void assignMatches(){
-		ArrayList<Object> players = new ArrayList<>();//players to assign
+		ArrayList<Object> players = new ArrayList<Object>();//players to assign
 		players.addAll(playerBrains.keySet()); //add all team names
 		matches = combineIntoPairs(players);
 	}
@@ -160,7 +160,7 @@ public class GameManager {
 			//play the match between them
 			if (part1.get(0).getClass() == "".getClass() &&
 					 part2.get(0).getClass() == "".getClass()){
-				ArrayList<Object> resultArray = new ArrayList<>();
+				ArrayList<Object> resultArray = new ArrayList<Object>();
 
 				resultArray.add(tournMatch((String)part1.get(0), 
 						(String)part2.get(0)));
@@ -173,7 +173,7 @@ public class GameManager {
 				return playMatches(resultArray);
 			} else {
 				//explore one of the branches
-				ArrayList<Object> resultArray = new ArrayList<>();
+				ArrayList<Object> resultArray = new ArrayList<Object>();
 				
 				//deal with only one branch at a time (hacky?..)
 				if(part1.size()>1){
@@ -411,8 +411,8 @@ public class GameManager {
 	 * and their scores.
 	 */
 	public void resetBrains(){
-		playerBrains = new HashMap<>();
-		playerScores = new HashMap<>();
+		playerBrains = new HashMap<String, StateMachine>();
+		playerScores = new HashMap<String, Integer>();
 	}
 	
 	/**
