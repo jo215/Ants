@@ -25,7 +25,7 @@ public class StateMachine {
 	 * Private Constructor. Sets up an empty state machine.
 	 */
 	private StateMachine() {
-		states = new ArrayList<>();
+		states = new ArrayList<State_Abstract>();
 	}
 	
 	/**
@@ -47,7 +47,8 @@ public class StateMachine {
 		@SuppressWarnings("unused")
 		int currentState = 0;
 		//	Open the file stream
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)))) {
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)));
 			//	Read each line of the file
 			String line = br.readLine();
 			while(line != null) {
