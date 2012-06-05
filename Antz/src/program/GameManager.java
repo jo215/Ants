@@ -16,7 +16,7 @@ import ai.StateMachine;
  */
 public class GameManager {
 
-	private boolean debug = false;
+	private boolean debug = true;
 	
 	// The set of uploaded brains - identified by their filename
 	private HashMap<String, StateMachine> playerBrains;
@@ -43,8 +43,8 @@ public class GameManager {
 		} else {
 			//	For debugging - bypass all the choosing worlds & ants UI and just change these three lines:
 			setWorld(World.generateMap());
-			StateMachine blackBrain = StateMachine.newInstance("milit.ant2");
-			StateMachine redBrain = StateMachine.newInstance("milit.ant3");
+			StateMachine blackBrain = StateMachine.newInstance("sample.ant");
+			StateMachine redBrain = StateMachine.newInstance("sample.ant");
 			world.setBlackBrain(blackBrain.getName(), blackBrain);
 			world.setRedBrain(redBrain.getName(), redBrain);
 			world.beginGame();
