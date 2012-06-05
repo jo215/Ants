@@ -25,7 +25,7 @@ import world.World;
 @SuppressWarnings("serial")
 public class GameplayScreen extends JFrame {
 
-	private MapPanel mapPanel;
+	protected MapPanel mapPanel;
 	private ScorePanel scorePanel;
 	private ControlPanel controlPanel;
 	
@@ -61,18 +61,10 @@ public class GameplayScreen extends JFrame {
 
 	    // make control panel
 	    JPanel controls = new JPanel(new GridLayout(1,2));    
-	    controlPanel = new ControlPanel(world);
+	    controlPanel = new ControlPanel(world, mapPanel);
 	    controls.add(controlPanel);
 	    
-	    // make marker check box
-	    JCheckBox markersCheckbox = new JCheckBox("Show markers");
-	    markersCheckbox.setSelected(mapPanel.doDrawMarkers());
-	    markersCheckbox.addItemListener(new ItemListener(){
-	    	 public void itemStateChanged(ItemEvent e) {
-	             mapPanel.toggleMarkers();
-	         }
-	    });
-	    controls.add(markersCheckbox);
+
 	    
 	    mainPanel.add("South", controls);
 	    mainPanel.add("East", new JPanel());

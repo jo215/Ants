@@ -2,6 +2,7 @@ package ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
@@ -33,9 +34,11 @@ public class ScorePanel extends JPanel {
 	public ScorePanel(World world) {
 		super();
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		
 		///	Top panel is the player names and scores display
 		JPanel topPanel = new JPanel();
 		add(topPanel);
+		Font font = new Font("Verdana", Font.PLAIN, 16);
 		
 		//	outer Red panel
 		JPanel redPanel = new JPanel(new GridLayout(1, 2));
@@ -45,12 +48,14 @@ public class ScorePanel extends JPanel {
 		ImageIcon red = new ImageIcon("images/redant_E_tiny.gif");
 		//JLabel redBrain = new JLabel(world.getRedBrain().getName(), red, JLabel.TRAILING);
 		JLabel redBrain = new JLabel(world.getRedName(), red, JLabel.TRAILING);
+		redBrain.setFont(font);
 		redBrain.setForeground(Color.RED);
 		redBrain.setHorizontalAlignment(SwingConstants.CENTER);
 		redBrain.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		redPanel.add(redBrain);
 		//	Red score label
 		redScore = new JLabel("Score: " + world.getRedScore());
+		redScore.setFont(font);
 		redScore.setForeground(Color.RED);
 		redScore.setHorizontalAlignment(SwingConstants.CENTER);
 		redScore.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
@@ -68,11 +73,13 @@ public class ScorePanel extends JPanel {
 		//JLabel blackBrain = new JLabel(world.getBlackBrain().getName(), black, JLabel.TRAILING);
 		JLabel blackBrain = new JLabel(world.getBlackName(), black, JLabel.TRAILING);
 		blackBrain.setForeground(Color.black);
+		blackBrain.setFont(font);
 		blackBrain.setHorizontalAlignment(SwingConstants.CENTER);
 		blackBrain.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		blackPanel.add(blackBrain);
 		//	black score label
 		blackScore = new JLabel("Score: " + world.getBlackScore());
+		blackScore.setFont(font);
 		blackScore.setForeground(Color.black);
 		blackScore.setHorizontalAlignment(SwingConstants.CENTER);
 		blackScore.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));

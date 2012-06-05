@@ -25,9 +25,10 @@ public class MapPanel extends JLabel{
 	private int zoomLevel;
 	private boolean drawMarkers;
 	
-	private static BufferedImage rocky_big, clear_big, anthill_big,
-						rocky_small, clear_small, anthill_small,
-						rocky_tiny, clear_tiny, anthill_tiny;
+	private static BufferedImage rocky_big, clear_big, red_anthill_big, black_anthill_big,
+						rocky_small, clear_small, red_anthill_small, black_anthill_small,
+						rocky_tiny, clear_tiny, red_anthill_tiny, black_anthill_tiny;
+	
 	public static BufferedImage[][] bigAnts, smallAnts, tinyAnts;
 	
 	public static final int imageWidth = 72;
@@ -82,13 +83,16 @@ public class MapPanel extends JLabel{
 			}
 			rocky_big = ImageIO.read(new File("Images/rocky_big.gif"));
 			clear_big = ImageIO.read(new File("Images/clear_big.gif"));
-			anthill_big = ImageIO.read(new File("Images/anthill_big.gif"));
+			red_anthill_big = ImageIO.read(new File("Images/red_anthill_big.gif"));
+			black_anthill_big = ImageIO.read(new File("Images/black_anthill_big.gif"));
 			rocky_small = ImageIO.read(new File("Images/rocky_small.gif"));
 			clear_small = ImageIO.read(new File("Images/clear_small.gif"));
-			anthill_small = ImageIO.read(new File("Images/anthill_small.gif"));
+			red_anthill_small = ImageIO.read(new File("Images/red_anthill_small.gif"));
+			black_anthill_small = ImageIO.read(new File("Images/black_anthill_small.gif"));
 			rocky_tiny = ImageIO.read(new File("Images/rocky_tiny.gif"));
 			clear_tiny = ImageIO.read(new File("Images/clear_tiny.gif"));
-			anthill_tiny = ImageIO.read(new File("Images/anthill_tiny.gif"));
+			red_anthill_tiny = ImageIO.read(new File("Images/red_anthill_tiny.gif"));
+			black_anthill_tiny = ImageIO.read(new File("Images/black_anthill_tiny.gif"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Couldn't load image.");
@@ -107,27 +111,30 @@ public class MapPanel extends JLabel{
 		g2d.setColor(Color.BLACK);
 		g2d.fillRect(0, 0, getWidth(), getHeight());	
 		//	Choose image sizes based on zoom level
-		BufferedImage rocky = null, clear = null, anthill = null;
+		BufferedImage rocky = null, clear = null, red_anthill = null, black_anthill = null;
 		BufferedImage[][] ants = null;
 		switch (zoomLevel) {
 		case 1: 
 			rocky = rocky_big;
 			clear = clear_big;
-			anthill = anthill_big;
+			red_anthill = red_anthill_big;
+			black_anthill = black_anthill_big;
 			ants = bigAnts;
 			g2d.setFont(bigFont);
 			break;
 		case 2:
 			rocky = rocky_small;
 			clear = clear_small;
-			anthill = anthill_small;
+			red_anthill = red_anthill_small;
+			black_anthill = black_anthill_small;
 			ants = smallAnts;
 			g2d.setFont(smallFont);
 			break;
 		case 4:
 			rocky = rocky_tiny;
 			clear = clear_tiny;
-			anthill = anthill_tiny;
+			red_anthill = red_anthill_tiny;
+			black_anthill = black_anthill_tiny;
 			ants = tinyAnts;
 			g2d.setFont(tinyFont);
 			break;
@@ -157,10 +164,10 @@ public class MapPanel extends JLabel{
 						g2d.drawImage(clear, xPos, yPos , null);
 						break;
 					case BLACK_ANTHILL:
-						g2d.drawImage(anthill, xPos, yPos , null);
+						g2d.drawImage(black_anthill, xPos, yPos , null);
 						break;
 					case RED_ANTHILL:
-						g2d.drawImage(anthill, xPos, yPos, null);
+						g2d.drawImage(red_anthill, xPos, yPos, null);
 						break;
 				}
 				//	Draw food particles if applicable
