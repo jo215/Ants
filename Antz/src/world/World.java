@@ -59,7 +59,7 @@ public class World {
 	 */
 	public void beginGame() {
 
-		ants = new ArrayList<>();
+		ants = new ArrayList<Ant>();
 		
 		//reset scores for a new game:
 		redScore = 0;
@@ -479,7 +479,7 @@ public class World {
 		
 		// create all possible origin points for 18x18 regions that the elements
 		// will be placed in
-		ArrayList<Position> origins = new ArrayList<>();
+		ArrayList<Position> origins = new ArrayList<Position>();
 		for (int i = 0; i <= y - 18; i += 2){ // only even rows to preserve element's shape
 			for (int j = 0; j <= x - 18; j++){
 				origins.add(new Position(j, i));
@@ -554,7 +554,7 @@ public class World {
 	 * that the rock would be placed in
 	 */
 	private static void placeRock(Cell[][] cells, Position origin){
-		ArrayList<Position> rock = new ArrayList<>();
+		ArrayList<Position> rock = new ArrayList<Position>();
 		// Select rock shape at random 
 		int rockType = (int)(7*Math.random());
 		if (rockType == 0){
@@ -924,7 +924,8 @@ public class World {
 	 */
 	public static World parseWorld(String absolutePath) {
 		//	Open the file stream
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(absolutePath)))) {
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(absolutePath)));
 			//	Read each line of the file
 			//	First two lines are dimensions of map
 			String line = br.readLine();
