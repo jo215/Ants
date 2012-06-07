@@ -16,7 +16,7 @@ import ai.StateMachine;
  */
 public class GameManager {
 
-	private boolean debug = true;
+	private boolean debug = false;
 	
 	// The set of uploaded brains - identified by their filename
 	private HashMap<String, StateMachine> playerBrains;
