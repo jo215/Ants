@@ -19,7 +19,7 @@ public class Main {
 	{
 		setNimbusLookAndFeel();
 		//	Remember to set the seed
-		RandGenerator.setSeed(12345);
+		RandGenerator.setSeed(System.currentTimeMillis());
 		new GameManager();
 	}
 
