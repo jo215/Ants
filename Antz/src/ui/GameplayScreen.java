@@ -71,7 +71,7 @@ public class GameplayScreen extends JFrame {
 	    mainPanel.add("West", new JPanel());
 	    
 	    //  final initialization
-	    this.setExtendedState(this.getExtendedState()|JFrame.MAXIMIZED_BOTH);
+	    this.setPreferredSize(new Dimension(1680, 1050));
 	    this.setResizable(true);
 	    this.pack();
 	    this.setLocationRelativeTo(null);
