@@ -957,13 +957,15 @@ public class World {
 							cells[j][i] = new Cell(E_Terrain.BLACK_ANTHILL, 0, new Position(j, i));
 							break;
 						default:			//	Clear cell with food
-							cells[j][i] = new Cell(E_Terrain.CLEAR, Character.getNumericValue(line.charAt(j)), new Position(j, i));
+							int food = Character.getNumericValue(line.charAt(j));
+							if (food < 1 || food > 9)
+								throw new IllegalArgumentException();
+							cells[j][i] = new Cell(E_Terrain.CLEAR, food, new Position(j, i));
 							break;
 					}
 				}
 			}
-			
-			
+				
 			// check if borders are rocky
 			for (int i = 0; i < y; i++){
 				for (int j = 0; j < x; j++){
