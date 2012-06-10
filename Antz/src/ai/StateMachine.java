@@ -73,6 +73,10 @@ public class StateMachine {
 			return null;
 		}
 		//	StateMachine is fully populated & validated
+		if (sm.states.size() > 10000)
+		{
+			return null;
+		}
 		return sm;
 	}
 
